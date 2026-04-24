@@ -1,0 +1,1192 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rumah Bidan - Monitoring Kehamilan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: {
+                        sans: ['Nunito', 'sans-serif'],
+                    },
+                    colors: {
+                        brand: {
+                            50: '#fdf2f8',
+                            100: '#fce7f3',
+                            200: '#fbcfe8',
+                            300: '#f9a8d4',
+                            400: '#f472b6',
+                            500: '#ec4899',
+                            600: '#db2777',
+                            700: '#be185d',
+                            800: '#9d174d',
+                            900: '#831843',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #fdf2f8; }
+        .hide { display: none !important; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
+        }
+        /* Custom scrollbar */
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
+        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
+        
+        /* Animasi Countdown Real-time */
+        @keyframes heartbeat {
+            0% { transform: scale(1); }
+            10% { transform: scale(1.05); }
+            20% { transform: scale(1); }
+            100% { transform: scale(1); }
+        }
+        .animate-heartbeat {
+            animation: heartbeat 1s infinite;
+        }
+
+        /* Animasi Promo Melayang */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-8px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+        .animate-float {
+            animation: float 3s ease-in-out infinite;
+        }
+        .animate-float-delayed {
+            animation: float 3s ease-in-out infinite;
+            animation-delay: 1.5s;
+        }
+    </style>
+</head>
+<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+
+    <!-- Navbar -->
+    <nav class="bg-white shadow-sm sticky top-0 z-50">
+        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex justify-between h-16">
+                <div class="flex items-center">
+                    <svg class="h-8 w-8 text-brand-500 mr-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z" />
+                    </svg>
+                    <span class="font-bold text-xl text-brand-600">Rumah Bidan</span>
+                </div>
+                <div class="flex items-center space-x-4 hide" id="nav-menu">
+                    <!-- Navigasi khusus Bunda -->
+                    <div id="nav-links-bunda" class="space-x-4 flex items-center">
+                        <button onclick="showView('dashboard')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Beranda</button>
+                        <button onclick="showView('imt')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Kalkulator IMT</button>
+                        <button onclick="showProfile()" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Profil</button>
+                    </div>
+                    <!-- Indikator khusus Admin -->
+                    <div id="nav-links-admin" class="flex items-center hide">
+                        <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Mode Admin</span>
+                    </div>
+                    <button onclick="logout()" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-md text-sm font-bold hover:bg-red-100 transition">Keluar</button>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Main Content Area -->
+    <main class="flex-grow flex flex-col items-center p-4 sm:p-8 w-full max-w-5xl mx-auto relative">
+
+        <!-- VIEW: LOGIN -->
+        <div id="view-login" class="w-full max-w-md mt-6 sm:mt-10 mb-10">
+            <div class="glass-card rounded-2xl p-6 sm:p-8 text-center relative">
+                
+                <div class="w-16 h-16 bg-brand-100 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+                </div>
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang</h2>
+                <p class="text-gray-500 text-sm mb-6">Masukkan kode unik yang diberikan oleh Bidan untuk memantau kehamilan Anda.</p>
+                
+                <!-- Form Login -->
+                <form id="login-form" onsubmit="handleLogin(event)" class="mb-8">
+                    <input type="text" id="login-code" placeholder="Contoh: BUNDA123" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition mb-4 text-center text-lg font-bold uppercase tracking-wider" required>
+                    <p id="login-error" class="text-red-500 text-sm mb-4 hide">Kode tidak ditemukan. Silakan cek kembali.</p>
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-500/30 transition duration-200 transform hover:-translate-y-1">
+                        Masuk
+                    </button>
+                </form>
+
+                <!-- Promo Banner Spesial -->
+                <div class="mt-8 border-t border-brand-100 pt-8 relative">
+                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1 text-[10px] font-extrabold text-brand-500 rounded-full border border-brand-100 uppercase tracking-widest shadow-sm">
+                        Belum Punya Akses?
+                    </div>
+                    
+                    <div class="bg-gradient-to-br from-brand-50 via-white to-pink-50 rounded-2xl p-5 border border-brand-200 shadow-inner relative overflow-hidden">
+                        <!-- Ornamen Animasi Lucu -->
+                        <div class="absolute -top-2 -right-1 text-3xl animate-float opacity-70">✨</div>
+                        <div class="absolute bottom-1 -left-2 text-4xl animate-float-delayed opacity-60">👶</div>
+                        <div class="absolute top-1/2 left-2 text-2xl animate-pulse opacity-50">💖</div>
+                        <div class="absolute top-4 left-4 text-xl animate-float opacity-40">🎀</div>
+
+                        <span class="bg-red-500 text-white text-[10px] font-black uppercase tracking-wider py-1 px-3 rounded-full animate-pulse inline-block mb-3 shadow-md">
+                            Promo Spesial Bulan Ini! 🎉
+                        </span>
+                        
+                        <h3 class="font-black text-gray-800 text-lg mb-1 leading-tight">Akses Premium<br><span class="text-brand-600">Rumah Bidan</span></h3>
+                        <p class="text-xs text-gray-500 mb-4 px-2">Dapatkan info lengkap perkembangan janin, tips nutrisi, kalkulator kehamilan & HPL otomatis.</p>
+
+                        <div class="flex justify-center items-center space-x-3 mb-5 bg-white py-2 rounded-xl mx-2 shadow-sm border border-brand-50">
+                            <div class="text-right">
+                                <span class="block text-[10px] text-gray-400 uppercase font-bold">Harga Normal</span>
+                                <span class="text-sm text-gray-400 line-through font-bold">Rp 50.000</span>
+                            </div>
+                            <div class="w-px h-8 bg-gray-200"></div>
+                            <div class="text-left">
+                                <span class="block text-[10px] text-brand-500 uppercase font-bold animate-pulse">Diskon 50%</span>
+                                <span class="text-2xl font-black text-brand-600">Rp 25.000</span>
+                            </div>
+                        </div>
+
+                        <p class="text-[11px] font-bold text-gray-400 mb-3 uppercase tracking-wide">Pesan Akses Sekarang Via:</p>
+                        
+                        <div class="flex flex-col space-y-3 relative z-10">
+                            <!-- Tombol WhatsApp -->
+                            <a href="https://wa.me/6282278012715?text=Halo%20Bidan,%20saya%20ingin%20membeli%20akses%20premium%20Rumah%20Bidan%20seharga%20promo%2025rb." target="_blank" class="flex items-center justify-center bg-[#25D366] hover:bg-[#1ebd5c] text-white py-2.5 rounded-xl text-sm font-bold transition duration-300 transform hover:scale-105 shadow-lg shadow-green-500/30">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6.009L.445 24l6.104-1.6c1.758.956 3.743 1.46 5.482 1.46 6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.848c-1.802 0-3.568-.484-5.118-1.403l-.367-.218-3.8.997.997-3.8-.218-.367c-.919-1.55-1.403-3.316-1.403-5.118 0-5.541 4.509-10.05 10.05-10.05 5.541 0 10.05 4.509 10.05 10.05 0 5.541-4.509 10.05-10.05 10.05zm5.513-7.533c-.302-.151-1.785-.881-2.062-.982-.277-.101-.478-.151-.68.151-.201.302-.78 1.006-.957 1.208-.176.201-.352.226-.654.075-1.524-.766-2.613-1.444-3.626-2.909-.258-.372-.03-.564.12-.714.135-.136.302-.352.453-.529.151-.176.201-.302.302-.503.101-.201.05-.377-.025-.528-.075-.151-.68-1.636-.931-2.24-.246-.593-.497-.513-.68-.523-.176-.008-.377-.01-.579-.01-.201 0-.528.075-.805.377-.277.302-1.056 1.032-1.056 2.516s1.082 2.918 1.233 3.12c.151.201 2.128 3.25 5.152 4.553.719.309 1.28.494 1.717.633.722.23 1.38.197 1.897.12.576-.086 1.785-.729 2.036-1.434.251-.705.251-1.308.176-1.434-.076-.126-.277-.202-.579-.353z" /></svg>
+                                Beli via WhatsApp
+                            </a>
+                            <!-- Tombol TikTok -->
+                            <a href="https://www.tiktok.com/@bidan.de_12" target="_blank" class="flex items-center justify-center bg-gray-900 hover:bg-black text-white py-2.5 rounded-xl text-sm font-bold transition duration-300 transform hover:scale-105 shadow-lg shadow-gray-900/30">
+                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.8-5.46-.4-2.52.44-5.22 2.21-7.07 1.15-1.22 2.75-2.02 4.41-2.29.13-.02.26-.04.4-.04v4.03c-1.14-.04-2.31.25-3.23.94-1.05.77-1.74 2.06-1.77 3.39-.02 1.29.62 2.57 1.64 3.34 1.22.9 2.9.96 4.2.22 1.3-.73 2.1-2.15 2.13-3.64.04-3.58.01-7.16.03-10.74z" /></svg>
+                                Kunjungi TikTok Kami
+                            </a>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- VIEW: ADMIN DASHBOARD -->
+        <div id="view-admin" class="w-full hide animate-fade-in">
+            <div class="mb-6">
+                <h2 class="text-2xl font-bold text-gray-800">Dashboard Admin</h2>
+                <p class="text-gray-500 text-sm">Kelola data ibu hamil dan kode unik pendaftaran.</p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Form Input/Edit -->
+                <div class="glass-card rounded-2xl p-6 lg:col-span-1 h-fit border-t-4 border-brand-500">
+                    <h3 class="font-bold text-gray-800 mb-4 flex items-center" id="admin-form-title">
+                        <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                        Tambah Data Bunda
+                    </h3>
+                    <form id="admin-form" onsubmit="handleAdminSubmit(event)">
+                        <input type="hidden" id="admin-edit-original-code">
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Bunda</label>
+                            <input type="text" id="admin-input-name" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-400 focus:outline-none" required placeholder="Cth: Ibu Risa">
+                        </div>
+                        <div class="mb-4">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Kode Unik Login</label>
+                            <input type="text" id="admin-input-code" class="w-full px-3 py-2 border border-gray-300 rounded-lg uppercase font-bold text-brand-600 focus:ring-2 focus:ring-brand-400 focus:outline-none" required placeholder="Cth: RISA123">
+                            <p class="text-[10px] text-gray-400 mt-1">Kode ini akan digunakan Bunda untuk masuk ke web.</p>
+                        </div>
+                        <div class="mb-6">
+                            <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal HPHT (Opsional)</label>
+                            <input type="date" id="admin-input-hpht" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-brand-400 focus:outline-none">
+                            <p class="text-[10px] text-gray-400 mt-1">Kosongkan saat mendaftar baru. Bunda akan mengisinya saat pertama kali login.</p>
+                        </div>
+                        <div class="flex space-x-2">
+                            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white py-2 rounded-lg font-bold transition" id="admin-btn-submit">Simpan Data</button>
+                            <button type="button" onclick="resetAdminForm()" class="w-full bg-gray-100 hover:bg-gray-200 text-gray-700 py-2 rounded-lg font-bold transition hide" id="admin-btn-cancel">Batal</button>
+                        </div>
+                    </form>
+                </div>
+
+                <!-- Tabel Data -->
+                <div class="glass-card rounded-2xl p-0 lg:col-span-2 overflow-hidden border border-gray-100">
+                    <div class="p-6 border-b border-gray-100 bg-white">
+                        <h3 class="font-bold text-gray-800">Daftar Pasien Terdaftar</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse min-w-max">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-600 border-b border-gray-200">
+                                    <th class="p-4 text-sm font-bold">Nama Bunda</th>
+                                    <th class="p-4 text-sm font-bold">Kode Login</th>
+                                    <th class="p-4 text-sm font-bold">HPHT</th>
+                                    <th class="p-4 text-sm font-bold text-center">Aksi</th>
+                                </tr>
+                            </thead>
+                            <tbody id="admin-table-body" class="bg-white">
+                                <!-- JS Injection -->
+                            </tbody>
+                        </table>
+                    </div>
+                    <div id="admin-empty-state" class="p-8 text-center text-gray-400 hide">
+                        <svg class="w-12 h-12 mx-auto mb-3 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4"></path></svg>
+                        <p>Belum ada data pasien terdaftar.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: SETUP HPHT -->
+        <div id="view-setup" class="w-full max-w-md mt-10 hide">
+            <div class="glass-card rounded-2xl p-8 text-center">
+                <h2 class="text-2xl font-bold text-gray-800 mb-2">Langkah Awal</h2>
+                <p class="text-gray-500 text-sm mb-6">Untuk memberikan informasi yang akurat, mohon masukkan Hari Pertama Haid Terakhir (HPHT) Anda.</p>
+                
+                <form id="setup-form" onsubmit="handleSetup(event)">
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Panggilan Bunda</label>
+                        <input type="text" id="setup-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition text-lg" required placeholder="Contoh: Bunda Risa">
+                    </div>
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Tanggal HPHT</label>
+                        <input type="date" id="hpht-input" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition text-lg" required>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg transition duration-200">
+                        Simpan & Lanjutkan
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW: DASHBOARD (UNTUK BUNDA) -->
+        <div id="view-dashboard" class="w-full hide animate-fade-in">
+            <!-- Greeting -->
+            <div class="mb-6 flex justify-between items-end">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-800" id="dash-welcome">Halo, Bunda!</h2>
+                    <p class="text-gray-500 text-sm">Pantau terus perkembangan buah hati Anda.</p>
+                </div>
+            </div>
+
+            <!-- Header Stats -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                <!-- Usia Kehamilan -->
+                <div class="glass-card rounded-2xl p-6 flex items-center bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-xl shadow-brand-500/20">
+                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-6 backdrop-blur-sm">
+                        <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    </div>
+                    <div>
+                        <p class="text-brand-100 font-semibold mb-1">Usia Kehamilan Saat Ini</p>
+                        <h3 class="text-3xl font-bold" id="dash-usia">0 Minggu 0 Hari</h3>
+                        <p class="text-sm mt-1 opacity-80" id="dash-trimester">Trimester -</p>
+                    </div>
+                </div>
+
+                <!-- HPL -->
+                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <p class="text-gray-500 font-semibold mb-1">Hari Perkiraan Lahir (HPL)</p>
+                            <h3 class="text-2xl font-bold text-gray-800" id="dash-hpl">DD MM YYYY</h3>
+                        </div>
+                        <div class="w-12 h-12 bg-blue-50 rounded-full flex items-center justify-center text-blue-500">
+                            <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"></path></svg>
+                        </div>
+                    </div>
+                    
+                    <p class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Menuju Kelahiran:</p>
+                    <div class="flex space-x-2 sm:space-x-3">
+                        <div class="bg-gradient-to-br from-blue-500 to-blue-600 rounded-xl p-2 sm:p-3 flex-1 text-center shadow-lg shadow-blue-500/20 transform transition duration-300 hover:-translate-y-1">
+                            <span class="block text-2xl sm:text-3xl font-black text-white drop-shadow-md tabular-nums" id="dash-sisa-hari">0</span>
+                            <span class="text-[9px] sm:text-[10px] uppercase font-bold text-blue-100 tracking-wider">Hari</span>
+                        </div>
+                        <div class="bg-gradient-to-br from-brand-400 to-brand-500 rounded-xl p-2 sm:p-3 flex-1 text-center shadow-lg shadow-brand-500/20 transform transition duration-300 hover:-translate-y-1">
+                            <span class="block text-2xl sm:text-3xl font-black text-white drop-shadow-md tabular-nums" id="dash-sisa-jam">00</span>
+                            <span class="text-[9px] sm:text-[10px] uppercase font-bold text-brand-100 tracking-wider">Jam</span>
+                        </div>
+                        <div class="bg-gradient-to-br from-purple-400 to-purple-500 rounded-xl p-2 sm:p-3 flex-1 text-center shadow-lg shadow-purple-500/20 transform transition duration-300 hover:-translate-y-1">
+                            <span class="block text-2xl sm:text-3xl font-black text-white drop-shadow-md tabular-nums" id="dash-sisa-menit">00</span>
+                            <span class="text-[9px] sm:text-[10px] uppercase font-bold text-purple-100 tracking-wider">Menit</span>
+                        </div>
+                        <div class="bg-gradient-to-br from-pink-400 to-pink-500 rounded-xl p-2 sm:p-3 flex-1 text-center shadow-lg shadow-pink-500/20 animate-heartbeat">
+                            <span class="block text-2xl sm:text-3xl font-black text-white drop-shadow-md tabular-nums" id="dash-sisa-detik">00</span>
+                            <span class="text-[9px] sm:text-[10px] uppercase font-bold text-pink-100 tracking-wider">Detik</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Content Grid -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <!-- Kolom Kiri: Perkembangan -->
+                <div class="lg:col-span-1 space-y-6">
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-brand-400">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
+                            Perkembangan Janin
+                        </h4>
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
+                            <p class="text-sm text-gray-500 mb-1">Perkiraan Ukuran</p>
+                            <img id="info-gambar-ukuran" src="" alt="Ilustrasi Ukuran Janin" class="w-16 h-16 mx-auto mb-3 drop-shadow-md hide">
+                            <p class="font-bold text-brand-600 text-lg" id="info-ukuran">Sebesar buah X</p>
+                            <p class="text-xs text-gray-400 mt-1" id="info-bb">Estimasi Berat: -</p>
+                        </div>
+                        <p class="text-gray-600 text-sm leading-relaxed" id="info-perkembangan">Deskripsi perkembangan janin akan muncul di sini.</p>
+                    </div>
+                    
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-yellow-400">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                            Pantangan & Hindari
+                        </h4>
+                        <ul class="text-sm text-gray-600 space-y-2 list-disc pl-5 marker:text-yellow-500" id="info-pantangan">
+                            <li>Memuat data...</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <!-- Kolom Tengah: Nutrisi & Keluhan -->
+                <div class="lg:col-span-2 space-y-6">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Makanan -->
+                        <div class="glass-card rounded-2xl p-6 border-t-4 border-green-400">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                                Rekomendasi Makanan
+                            </h4>
+                            <div class="space-y-3" id="info-makanan">
+                                <!-- JS Injection -->
+                            </div>
+                        </div>
+
+                        <!-- Vitamin -->
+                        <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-400">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                Vitamin Dianjurkan
+                            </h4>
+                            <ul class="text-sm text-gray-600 space-y-2" id="info-vitamin">
+                                <!-- JS Injection -->
+                            </ul>
+                        </div>
+                    </div>
+
+                    <!-- Keluhan -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-purple-400">
+                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                            Keluhan Umum & Solusi
+                        </h4>
+                        <div class="space-y-4" id="info-keluhan">
+                            <!-- JS Injection -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: PROFIL -->
+        <div id="view-profile" class="w-full max-w-md mx-auto hide">
+            <div class="glass-card rounded-2xl p-8">
+                <div class="flex items-center mb-6 border-b pb-4">
+                    <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <h2 class="text-2xl font-bold text-gray-800">Profil Bunda</h2>
+                </div>
+                
+                <div class="mb-6 p-4 bg-blue-50 border border-blue-100 rounded-xl flex items-start">
+                    <svg class="w-5 h-5 text-blue-500 mr-3 mt-0.5 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 16h-1v-4h-1m1-4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <p class="text-xs text-blue-800 leading-relaxed">
+                        <strong>Catatan:</strong> Jika Anda ingin mengubah tanggal Hari Pertama Haid Terakhir (HPHT) karena suatu hal, silakan hubungi Bidan / Admin Anda.
+                    </p>
+                </div>
+
+                <form id="profile-form" onsubmit="handleProfileUpdate(event)">
+                    <div class="mb-4 text-left">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Nama Panggilan Bunda</label>
+                        <input type="text" id="profile-name" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition text-lg" required>
+                    </div>
+                    <div class="mb-6 text-left">
+                        <label class="block text-sm font-semibold text-gray-700 mb-1">Kode Unik Login</label>
+                        <input type="text" id="profile-code" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition text-lg uppercase font-bold" required>
+                        <p class="text-xs text-gray-500 mt-1">Anda dapat mengubah kode unik ini. Ingat kode baru Anda untuk login selanjutnya.</p>
+                    </div>
+                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-200">
+                        Simpan Perubahan
+                    </button>
+                    <p id="profile-success" class="text-green-600 text-sm mt-3 text-center font-semibold hide">Profil berhasil diperbarui!</p>
+                </form>
+            </div>
+        </div>
+
+        <!-- VIEW: KALKULATOR IMT -->
+        <div id="view-imt" class="w-full max-w-2xl mx-auto hide">
+            <div class="glass-card rounded-2xl p-8">
+                <div class="flex items-center mb-6 border-b pb-4">
+                    <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <h2 class="text-2xl font-bold text-gray-800">Kalkulator IMT Ibu Hamil</h2>
+                </div>
+                
+                <p class="text-gray-600 mb-6 text-sm">Mengetahui Indeks Massa Tubuh (IMT) sebelum hamil sangat penting untuk menentukan target kenaikan berat badan yang ideal selama kehamilan.</p>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <!-- Form -->
+                    <div>
+                        <form onsubmit="calculateIMT(event)" class="space-y-4">
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Berat Badan (Sebelum Hamil) - Kg</label>
+                                <input type="number" step="0.1" id="imt-bb" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Tinggi Badan - cm</label>
+                                <input type="number" id="imt-tb" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition" required>
+                            </div>
+                            <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl shadow-md transition duration-200">
+                                Hitung IMT
+                            </button>
+                        </form>
+                    </div>
+
+                    <!-- Result -->
+                    <div class="bg-brand-50 rounded-xl p-6 border border-brand-100 flex flex-col justify-center text-center">
+                        <div id="imt-result-container" class="hide">
+                            <p class="text-sm text-gray-500 mb-1">Nilai IMT Anda</p>
+                            <h3 class="text-4xl font-black text-brand-600 mb-2" id="imt-score">0.0</h3>
+                            <span class="inline-block px-3 py-1 rounded-full text-sm font-bold mb-4" id="imt-category-badge">Kategori</span>
+                            
+                            <div class="text-left bg-white p-4 rounded-lg shadow-sm border border-brand-100 space-y-3">
+                                <div>
+                                    <p class="text-xs text-gray-500 mb-1">Rekomendasi Kenaikan BB Selama Hamil:</p>
+                                    <p class="text-sm font-bold text-gray-800" id="imt-recommendation">--</p>
+                                </div>
+                                <div class="border-t pt-2">
+                                    <p class="text-xs text-red-500 font-bold mb-1">⚠️ Risiko Utama:</p>
+                                    <p class="text-sm text-gray-700 leading-snug" id="imt-risk">--</p>
+                                </div>
+                                <div class="border-t pt-2">
+                                    <p class="text-xs text-green-600 font-bold mb-1">💡 Cara Mengatasi:</p>
+                                    <p class="text-sm text-gray-700 leading-snug" id="imt-solution">--</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div id="imt-placeholder" class="text-gray-400">
+                            <svg class="w-16 h-16 mx-auto mb-2 opacity-50" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 7h6m0 10v-3m-3 3h.01M9 17h.01M9 14h.01M12 14h.01M15 11h.01M12 11h.01M9 11h.01M7 21h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z"></path></svg>
+                            <p class="text-sm">Masukkan data untuk melihat hasil</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Detail Penjelasan IMT -->
+                <div class="mt-10 bg-white p-6 rounded-2xl shadow-sm border border-gray-100">
+                    <h3 class="text-lg font-bold text-gray-800 mb-4 border-b pb-2">Penjelasan Detail Kategori IMT Pra-Hamil</h3>
+                    <div class="space-y-4">
+                        <!-- Underweight -->
+                        <div class="p-4 bg-blue-50 rounded-xl border border-blue-100">
+                            <h4 class="font-bold text-blue-800 flex items-center"><span class="w-3 h-3 rounded-full bg-blue-500 mr-2"></span> Kurus (IMT &lt; 18.5)</h4>
+                            <ul class="mt-2 text-sm text-gray-700 space-y-1 list-disc pl-5">
+                                <li><b>Rekomendasi Kenaikan BB:</b> 12,5 - 18 kg</li>
+                                <li><b>Risiko:</b> Bayi lahir prematur, Berat Badan Lahir Rendah (BBLR), dan anemia pada ibu.</li>
+                                <li><b>Cara Mengatasi:</b> Tingkatkan asupan kalori padat nutrisi (alpukat, daging, kacang-kacangan), makan porsi kecil namun sering, dan konsultasikan dengan ahli gizi/dokter.</li>
+                            </ul>
+                        </div>
+                        <!-- Normal -->
+                        <div class="p-4 bg-green-50 rounded-xl border border-green-100">
+                            <h4 class="font-bold text-green-800 flex items-center"><span class="w-3 h-3 rounded-full bg-green-500 mr-2"></span> Normal (IMT 18.5 - 24.9)</h4>
+                            <ul class="mt-2 text-sm text-gray-700 space-y-1 list-disc pl-5">
+                                <li><b>Rekomendasi Kenaikan BB:</b> 11,5 - 16 kg</li>
+                                <li><b>Risiko:</b> Relatif komplikasi sangat rendah, namun tetap perlu menjaga agar kenaikan tidak berlebih untuk mencegah diabetes gestasional.</li>
+                                <li><b>Cara Mengatasi:</b> Pertahankan pola makan bergizi seimbang, rutin senam hamil atau jalan kaki ringan, dan patuhi konsumsi vitamin kehamilan.</li>
+                            </ul>
+                        </div>
+                        <!-- Overweight -->
+                        <div class="p-4 bg-yellow-50 rounded-xl border border-yellow-100">
+                            <h4 class="font-bold text-yellow-800 flex items-center"><span class="w-3 h-3 rounded-full bg-yellow-500 mr-2"></span> Kelebihan Berat Badan (IMT 25.0 - 29.9)</h4>
+                            <ul class="mt-2 text-sm text-gray-700 space-y-1 list-disc pl-5">
+                                <li><b>Rekomendasi Kenaikan BB:</b> 7 - 11,5 kg</li>
+                                <li><b>Risiko:</b> Risiko preeklampsia (darah tinggi), diabetes gestasional, bayi lahir makrosomia (besar), dan kemungkinan persalinan sulit.</li>
+                                <li><b>Cara Mengatasi:</b> Kurangi gula tambahan dan karbohidrat sederhana, perbanyak serat dari sayuran, pilih sumber lemak sehat, serta rutin bergerak aktif dengan panduan dokter.</li>
+                            </ul>
+                        </div>
+                        <!-- Obesitas -->
+                        <div class="p-4 bg-red-50 rounded-xl border border-red-100">
+                            <h4 class="font-bold text-red-800 flex items-center"><span class="w-3 h-3 rounded-full bg-red-500 mr-2"></span> Obesitas (IMT &gt; 30.0)</h4>
+                            <ul class="mt-2 text-sm text-gray-700 space-y-1 list-disc pl-5">
+                                <li><b>Rekomendasi Kenaikan BB:</b> 5 - 9 kg</li>
+                                <li><b>Risiko:</b> Risiko tinggi preeklampsia parah, sleep apnea, komplikasi kardiovaskular, dan kemungkinan besar membutuhkan prosedur bedah caesar.</li>
+                                <li><b>Cara Mengatasi:</b> <b>Jangan melakukan diet ketat sembarangan!</b> Harus dalam pengawasan ketat dokter spesialis. Lakukan olahraga khusus untuk ibu hamil, dan rutin pantau tekanan darah serta gula darah.</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </main>
+
+    <footer class="bg-white py-6 border-t text-center text-gray-400 text-sm mt-auto">
+        <p>&copy; 2026 Rumah Bidan. Selalu konsultasikan dengan dokter kandungan Anda.</p>
+    </footer>
+
+    <!-- JAVASCRIPT LOGIC -->
+    <script>
+        const WEB_APP_URL = "https://script.google.com/macros/s/AKfycbw95WbEplo-2C0sd84NihP-68oBvzmHsERJXDXTuihmXrfQNqcBt0SEprdbNu-9s8mh9A/exec";
+
+        /* ========================================================================
+        INTEGRASI GOOGLE SHEETS API (Fetch Real-Time Async)
+        ======================================================================== */
+        const Database = {
+            async getUsers() {
+                try {
+                    const response = await fetch(`${WEB_APP_URL}?action=getAll`);
+                    return await response.json();
+                } catch (error) {
+                    console.error("Gagal mengambil data:", error);
+                    return {};
+                }
+            },
+
+            async verifyCode(code) {
+                const users = await this.getUsers();
+                const user = users[code.toUpperCase()];
+                if (user) {
+                    return {
+                        valid: true,
+                        isAdmin: user.name.toUpperCase() === 'ADMIN',
+                        data: user
+                    };
+                }
+                return { valid: false };
+            },
+
+            async getUserData(code) {
+                const users = await this.getUsers();
+                return users[code.toUpperCase()] || null;
+            },
+
+            async saveUserData(code, data) {
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'save',
+                            code: code.toUpperCase(),
+                            name: data.name,
+                            hpht: data.hpht
+                        })
+                    });
+                    return true;
+                } catch (error) {
+                    console.error("Gagal menyimpan data:", error);
+                    return false;
+                }
+            },
+
+            async deleteUser(code) {
+                try {
+                    await fetch(WEB_APP_URL, {
+                        method: 'POST',
+                        body: JSON.stringify({
+                            action: 'delete',
+                            code: code.toUpperCase()
+                        })
+                    });
+                    return true;
+                } catch (error) {
+                    console.error("Gagal menghapus data:", error);
+                    return false;
+                }
+            },
+            
+            async changeUserCode(oldCode, newCode, data) {
+                await this.deleteUser(oldCode);
+                await this.saveUserData(newCode, data);
+                return true;
+            }
+        };
+
+        /* ========================================================================
+        DATA MEDIS KEHAMILAN (Berdasarkan Trimester/Bulan)
+        ========================================================================
+        */
+        const PregnancyData = [
+            {
+                minWeek: 0, maxWeek: 13, name: "Trimester 1",
+                ukuran: "Biji Selasih hingga Buah Lemon",
+                gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f34b.svg",
+                bb: "0 - 25 gram",
+                perkembangan: "Masa krusial pembentukan organ vital janin (jantung, otak, sumsum tulang belakang). Plasenta mulai terbentuk untuk menyalurkan nutrisi.",
+                makanan: [
+                    { t: "Kaya Asam Folat", d: "Bayam, brokoli, alpukat, kacang-kacangan." },
+                    { t: "Protein Tinggi", d: "Telur matang, daging tanpa lemak, tempe." },
+                    { t: "Mudah Dicerna", d: "Biskuit jahe, buah segar untuk mengatasi mual." }
+                ],
+                vitamin: ["Asam Folat (Sangat Penting)", "Vitamin B6 (untuk kurangi mual)", "Vitamin D"],
+                keluhan: [
+                    { k: "Mual & Muntah (Morning Sickness)", s: "Makan porsi kecil tapi sering, hindari bau menyengat, minum jahe hangat." },
+                    { k: "Kelelahan & Mengantuk", s: "Istirahat cukup, perbanyak tidur malam, kurangi aktivitas berat." },
+                    { k: "Payudara Nyeri", s: "Gunakan bra yang nyaman dan menyangga dengan baik (tanpa kawat)." }
+                ],
+                pantangan: [
+                    "Asap rokok dan alkohol",
+                    "Daging, telur, atau ikan mentah/setengah matang (Sushi mentah)",
+                    "Susu tidak dipasteurisasi",
+                    "Kafein berlebihan (>1 cangkir kopi/hari)",
+                    "Obat-obatan tanpa resep dokter"
+                ]
+            },
+            {
+                minWeek: 14, maxWeek: 27, name: "Trimester 2",
+                ukuran: "Buah Apel hingga Kembang Kol",
+                gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f34e.svg",
+                bb: "40 gram - 1.000 gram",
+                perkembangan: "Sering disebut 'fase bulan madu' karena mual mereda. Janin mulai bisa mendengar, menelan, dan rambut mulai tumbuh. Gerakan pertama (quickening) biasanya terasa di minggu 16-22.",
+                makanan: [
+                    { t: "Kaya Kalsium", d: "Susu pasteurisasi, keju, yoghurt, ikan teri." },
+                    { t: "Kaya Zat Besi", d: "Daging merah tanpa lemak, sayuran hijau, kacang merah (cegah anemia)." },
+                    { t: "Omega 3 & DHA", d: "Ikan laut (salmon, sarden) matang sempurna." }
+                ],
+                vitamin: ["Zat Besi (Fe)", "Kalsium", "DHA / Minyak Ikan", "Multivitamin Kehamilan"],
+                keluhan: [
+                    { k: "Nyeri Punggung/Pinggang", s: "Gunakan sepatu datar, kompres hangat, lakukan senam hamil/yoga ringan." },
+                    { k: "Kram Kaki (terutama malam)", s: "Pijat lembut, luruskan kaki, pastikan asupan kalsium & air putih cukup." },
+                    { k: "Garis hitam di perut (Linea Nigra)", s: "Hal normal akibat hormon, akan pudar setelah melahirkan. Gunakan pelembap." }
+                ],
+                pantangan: [
+                    "Tidur telentang terlalu lama (bisa menekan pembuluh darah besar)",
+                    "Angkat beban terlalu berat",
+                    "Aktivitas olahraga yang rawan jatuh (berkuda, ski)",
+                    "Sauna atau air panas berendam terlalu lama"
+                ]
+            },
+            {
+                minWeek: 28, maxWeek: 42, name: "Trimester 3",
+                ukuran: "Terong hingga Buah Semangka",
+                gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f349.svg",
+                bb: "1.000 gram - 3.500+ gram",
+                perkembangan: "Pematangan fungsi paru-paru dan otak janin sangat pesat. Ruang gerak janin semakin sempit, posisi kepala mulai turun ke arah panggul persiapan persalinan.",
+                makanan: [
+                    { t: "Tinggi Serat", d: "Oatmeal, pepaya matang, sayuran (mencegah sembelit)." },
+                    { t: "Vitamin C", d: "Jeruk, tomat (membantu penyerapan zat besi)." },
+                    { t: "Cairan Ekstra", d: "Air putih minimal 2.5 - 3 liter sehari." }
+                ],
+                vitamin: ["Kalsium (Terus dilanjutkan)", "Zat Besi", "Vitamin C"],
+                keluhan: [
+                    { k: "Sering Buang Air Kecil", s: "Kurangi minum 2 jam sebelum tidur, perbanyak siang hari." },
+                    { k: "Sesak Napas & Maag", s: "Makan porsi kecil, duduk tegak setelah makan, ganjal bantal saat tidur." },
+                    { k: "Kontraksi Palsu (Braxton Hicks)", s: "Ubah posisi, minum air hangat, istirahat. (Hubungi dokter jika teratur & nyeri)." },
+                    { k: "Kaki Bengkak (Edema)", s: "Kurangi garam, naikkan posisi kaki saat duduk/tidur, hindari berdiri lama." }
+                ],
+                pantangan: [
+                    "Bepergian jauh/terbang tanpa persetujuan dokter",
+                    "Tidur telentang mutlak dihindari (biasakan miring ke kiri)",
+                    "Stres dan kecemasan berlebihan menjelang persalinan",
+                    "Menahan buang air kecil (mencegah Infeksi Saluran Kemih)"
+                ]
+            }
+        ];
+
+        /* ========================================================================
+        APPLICATION STATE & LOGIC
+        ========================================================================
+        */
+        let state = {
+            code: null,
+            name: null,
+            hpht: null,
+            weeks: 0,
+            days: 0,
+            isAdmin: false
+        };
+        let countdownInterval;
+
+        // UI Management
+        function showView(viewId) {
+            document.getElementById('view-login').classList.add('hide');
+            document.getElementById('view-setup').classList.add('hide');
+            document.getElementById('view-dashboard').classList.add('hide');
+            document.getElementById('view-imt').classList.add('hide');
+            document.getElementById('view-profile').classList.add('hide');
+            document.getElementById('view-admin').classList.add('hide');
+
+            const navMenu = document.getElementById('nav-menu');
+            const navBunda = document.getElementById('nav-links-bunda');
+            const navAdmin = document.getElementById('nav-links-admin');
+
+            if(viewId === 'login' || viewId === 'setup') {
+                navMenu.classList.add('hide');
+            } else {
+                navMenu.classList.remove('hide');
+                if(state.isAdmin) {
+                    navBunda.classList.add('hide');
+                    navAdmin.classList.remove('hide');
+                } else {
+                    navBunda.classList.remove('hide');
+                    navAdmin.classList.add('hide');
+                }
+            }
+
+            document.getElementById(`view-${viewId}`).classList.remove('hide');
+        }
+
+        // Init App (Sekarang menggunakan mode async karena butuh loading ke Google Sheets)
+        window.onload = async () => {
+            const savedCode = sessionStorage.getItem('current_user_code');
+            const savedIsAdmin = sessionStorage.getItem('is_admin') === 'true';
+
+            if (savedCode) {
+                state.code = savedCode;
+                state.isAdmin = savedIsAdmin;
+                if (state.isAdmin) {
+                    await renderAdminTable();
+                    showView('admin');
+                } else {
+                    await checkUserFlow();
+                }
+            } else {
+                showView('login');
+            }
+        };
+
+        // Login Handler Async
+        async function handleLogin(e) {
+            e.preventDefault();
+            const inputCode = document.getElementById('login-code').value.trim().toUpperCase();
+            const errorEl = document.getElementById('login-error');
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+
+            // Set loading state
+            submitBtn.textContent = "Memeriksa...";
+            submitBtn.disabled = true;
+
+            const result = await Database.verifyCode(inputCode);
+
+            submitBtn.textContent = "Masuk";
+            submitBtn.disabled = false;
+
+            if (result.valid) {
+                state.code = inputCode;
+                state.isAdmin = result.isAdmin;
+                sessionStorage.setItem('current_user_code', state.code);
+                sessionStorage.setItem('is_admin', state.isAdmin);
+                
+                errorEl.classList.add('hide');
+                
+                if (state.isAdmin) {
+                    await renderAdminTable();
+                    showView('admin');
+                } else {
+                    await checkUserFlow();
+                }
+            } else {
+                errorEl.classList.remove('hide');
+            }
+        }
+
+        // Check if user has HPHT
+        async function checkUserFlow() {
+            const userData = await Database.getUserData(state.code);
+            if (userData && userData.hpht && userData.hpht !== '-') {
+                state.hpht = new Date(userData.hpht);
+                state.name = userData.name || "Bunda";
+                calculatePregnancy();
+                renderDashboard();
+                showView('dashboard');
+            } else {
+                showView('setup');
+                document.getElementById('hpht-input').max = new Date().toISOString().split("T")[0];
+                
+                // Auto-fill nama jika admin sudah mendaftarkannya
+                if (userData && userData.name && userData.name.toUpperCase() !== "BUNDA") {
+                    document.getElementById('setup-name').value = userData.name;
+                }
+            }
+        }
+
+        // Setup HPHT Handler
+        async function handleSetup(e) {
+            e.preventDefault();
+            const hphtVal = document.getElementById('hpht-input').value;
+            const nameVal = document.getElementById('setup-name').value.trim();
+            const btn = e.target.querySelector('button[type="submit"]');
+
+            if (nameVal.toUpperCase() === 'ADMIN') {
+                alert("Nama panggilan 'ADMIN' tidak diizinkan untuk akun Bunda.");
+                return;
+            }
+
+            if (hphtVal && nameVal) {
+                btn.textContent = "Menyimpan ke server...";
+                btn.disabled = true;
+
+                const userData = { hpht: hphtVal, name: nameVal };
+                await Database.saveUserData(state.code, userData);
+                
+                state.hpht = new Date(hphtVal);
+                state.name = nameVal;
+                calculatePregnancy();
+                renderDashboard();
+                
+                btn.textContent = "Simpan & Lanjutkan";
+                btn.disabled = false;
+                showView('dashboard');
+            }
+        }
+
+        /* ========================================================================
+        FUNGSI DASHBOARD ADMIN
+        ======================================================================== */
+        function formatInputDate(dateStr) {
+            if (!dateStr || dateStr === '-') return '';
+            try { return new Date(dateStr).toISOString().split('T')[0]; } 
+            catch { return dateStr; }
+        }
+
+        async function renderAdminTable() {
+            const tbody = document.getElementById('admin-table-body');
+            const emptyState = document.getElementById('admin-empty-state');
+            
+            // Loading UI
+            tbody.innerHTML = '<tr><td colspan="4" class="text-center p-6 text-gray-500 font-bold">Mengambil data dari Google Sheet...</td></tr>';
+            emptyState.classList.add('hide');
+
+            const users = await Database.getUsers();
+            tbody.innerHTML = '';
+            const userKeys = Object.keys(users);
+
+            if (userKeys.length === 0) {
+                emptyState.classList.remove('hide');
+                return;
+            }
+
+            userKeys.forEach(code => {
+                const data = users[code];
+                const isAdminBadge = data.name.toUpperCase() === 'ADMIN' ? '<span class="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-bold">ADMIN</span>' : '';
+                
+                const tr = document.createElement('tr');
+                tr.className = "border-b border-gray-100 hover:bg-gray-50 transition";
+                tr.innerHTML = `
+                    <td class="p-4 text-sm font-semibold text-gray-800">${data.name} ${isAdminBadge}</td>
+                    <td class="p-4 text-sm font-bold text-brand-600">${code}</td>
+                    <td class="p-4 text-sm text-gray-600">${data.hpht || '-'}</td>
+                    <td class="p-4 text-sm text-center">
+                        <button onclick="editAdminUser('${code}', '${data.name}', '${data.hpht}')" class="text-blue-600 hover:text-blue-800 bg-blue-50 px-3 py-1 rounded-md mr-2 font-semibold transition">Edit</button>
+                        <button onclick="deleteAdminUser('${code}')" class="text-red-600 hover:text-red-800 bg-red-50 px-3 py-1 rounded-md font-semibold transition">Hapus</button>
+                    </td>
+                `;
+                tbody.appendChild(tr);
+            });
+        }
+
+        async function handleAdminSubmit(e) {
+            e.preventDefault();
+            const name = document.getElementById('admin-input-name').value.trim();
+            const code = document.getElementById('admin-input-code').value.trim().toUpperCase();
+            const hpht = document.getElementById('admin-input-hpht').value || "-";
+            const originalCode = document.getElementById('admin-edit-original-code').value;
+            const btn = document.getElementById('admin-btn-submit');
+
+            if (!name || !code) return;
+
+            btn.textContent = "Menyimpan...";
+            btn.disabled = true;
+
+            const users = await Database.getUsers();
+
+            if (originalCode && originalCode !== code) {
+                if (users[code]) {
+                    alert("Kode Unik ini sudah digunakan oleh pasien lain! Silakan gunakan kode lain.");
+                    btn.textContent = "Update Data";
+                    btn.disabled = false;
+                    return;
+                }
+                await Database.changeUserCode(originalCode, code, { name: name, hpht: hpht });
+            } else if (!originalCode) {
+                if (users[code]) {
+                    alert("Kode Unik ini sudah terdaftar!");
+                    btn.textContent = "Simpan Data";
+                    btn.disabled = false;
+                    return;
+                }
+                await Database.saveUserData(code, { name: name, hpht: hpht });
+            } else {
+                await Database.saveUserData(code, { name: name, hpht: hpht });
+            }
+            
+            resetAdminForm();
+            await renderAdminTable();
+            alert("Data berhasil tersimpan ke Google Sheets!");
+        }
+
+        function editAdminUser(code, name, hpht) {
+            document.getElementById('admin-form-title').innerHTML = `
+                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z"></path></svg>
+                Edit Data Pasien
+            `;
+            document.getElementById('admin-input-name').value = name;
+            document.getElementById('admin-input-code').value = code;
+            document.getElementById('admin-input-hpht').value = formatInputDate(hpht);
+            document.getElementById('admin-edit-original-code').value = code;
+            
+            document.getElementById('admin-btn-submit').textContent = "Update Data";
+            document.getElementById('admin-btn-submit').disabled = false;
+            document.getElementById('admin-btn-cancel').classList.remove('hide');
+        }
+
+        function resetAdminForm() {
+            document.getElementById('admin-form').reset();
+            document.getElementById('admin-form-title').innerHTML = `
+                <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+                Tambah Data Bunda
+            `;
+            document.getElementById('admin-edit-original-code').value = '';
+            document.getElementById('admin-btn-submit').textContent = "Simpan Data";
+            document.getElementById('admin-btn-submit').disabled = false;
+            document.getElementById('admin-btn-cancel').classList.add('hide');
+        }
+
+        async function deleteAdminUser(code) {
+            if(confirm(`PERHATIAN: Yakin ingin menghapus data pasien dengan kode ${code}?`)) {
+                await Database.deleteUser(code);
+                await renderAdminTable();
+            }
+        }
+
+        // Profile Handlers
+        function showProfile() {
+            document.getElementById('profile-name').value = state.name;
+            document.getElementById('profile-code').value = state.code;
+            document.getElementById('profile-success').classList.add('hide');
+            showView('profile');
+        }
+
+        async function handleProfileUpdate(e) {
+            e.preventDefault();
+            const newName = document.getElementById('profile-name').value.trim();
+            const newCode = document.getElementById('profile-code').value.trim().toUpperCase();
+            const btn = e.target.querySelector('button[type="submit"]');
+
+            if (!newName || !newCode) return;
+            if (newName.toUpperCase() === 'ADMIN') {
+                alert("Anda tidak diizinkan menggunakan nama ini.");
+                return;
+            }
+
+            btn.textContent = "Menyimpan...";
+            btn.disabled = true;
+
+            if (newCode !== state.code) {
+                const users = await Database.getUsers();
+                if (users[newCode]) {
+                    alert("Kode Unik baru sudah terpakai oleh pasien lain. Pilih kode lain.");
+                    btn.textContent = "Simpan Perubahan";
+                    btn.disabled = false;
+                    return;
+                }
+                await Database.changeUserCode(state.code, newCode, { hpht: state.hpht.toISOString().split("T")[0], name: newName });
+                state.code = newCode;
+                sessionStorage.setItem('current_user_code', state.code);
+            } else {
+                await Database.saveUserData(state.code, { hpht: state.hpht.toISOString().split("T")[0], name: newName });
+            }
+
+            state.name = newName;
+            document.getElementById('profile-success').classList.remove('hide');
+            renderDashboard();
+            
+            btn.textContent = "Simpan Perubahan";
+            btn.disabled = false;
+
+            setTimeout(() => {
+                showView('dashboard');
+            }, 1500);
+        }
+
+        // Logout
+        function logout() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            sessionStorage.removeItem('current_user_code');
+            sessionStorage.removeItem('is_admin');
+            state = { code: null, name: null, hpht: null, weeks: 0, days: 0, isAdmin: false };
+            document.getElementById('login-form').reset();
+            document.getElementById('setup-form').reset();
+            if(document.getElementById('profile-form')) document.getElementById('profile-form').reset();
+            resetAdminForm();
+            showView('login');
+        }
+
+        // Core Calculations
+        function calculatePregnancy() {
+            const today = new Date();
+            today.setHours(0,0,0,0);
+            const hpht = new Date(state.hpht);
+            hpht.setHours(0,0,0,0);
+
+            const diffTime = Math.abs(today - hpht);
+            const diffDays = Math.floor(diffTime / (1000 * 60 * 60 * 24)); 
+            
+            state.weeks = Math.floor(diffDays / 7);
+            state.days = diffDays % 7;
+
+            const hpl = new Date(hpht);
+            hpl.setDate(hpl.getDate() + 280);
+            state.hpl = hpl;
+        }
+
+        function startCountdown() {
+            if (countdownInterval) clearInterval(countdownInterval);
+            const hplTime = state.hpl.getTime();
+            updateTimer();
+            countdownInterval = setInterval(updateTimer, 1000);
+
+            function updateTimer() {
+                const now = new Date().getTime();
+                const distance = hplTime - now;
+
+                if (distance < 0) {
+                    clearInterval(countdownInterval);
+                    document.getElementById('dash-sisa-hari').textContent = "0";
+                    document.getElementById('dash-sisa-jam').textContent = "00";
+                    document.getElementById('dash-sisa-menit').textContent = "00";
+                    document.getElementById('dash-sisa-detik').textContent = "00";
+                    return;
+                }
+
+                const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+                const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+                const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+                const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+                document.getElementById('dash-sisa-hari').textContent = days;
+                document.getElementById('dash-sisa-jam').textContent = String(hours).padStart(2, '0');
+                document.getElementById('dash-sisa-menit').textContent = String(minutes).padStart(2, '0');
+                document.getElementById('dash-sisa-detik').textContent = String(seconds).padStart(2, '0');
+            }
+        }
+
+        // Render Dashboard Data
+        function renderDashboard() {
+            document.getElementById('dash-welcome').textContent = `Halo, ${state.name}!`;
+            document.getElementById('dash-usia').textContent = `${state.weeks} Minggu ${state.days} Hari`;
+            
+            const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
+            document.getElementById('dash-hpl').textContent = state.hpl.toLocaleDateString('id-ID', options);
+            
+            startCountdown();
+
+            let currentData = PregnancyData[PregnancyData.length - 1]; 
+            for (let data of PregnancyData) {
+                if (state.weeks >= data.minWeek && state.weeks <= data.maxWeek) {
+                    currentData = data;
+                    break;
+                }
+            }
+
+            document.getElementById('dash-trimester').textContent = currentData.name;
+            
+            const imgUkuran = document.getElementById('info-gambar-ukuran');
+            if (currentData.gambarUkuran) {
+                imgUkuran.src = currentData.gambarUkuran;
+                imgUkuran.classList.remove('hide');
+            } else {
+                imgUkuran.classList.add('hide');
+            }
+
+            document.getElementById('info-ukuran').textContent = currentData.ukuran;
+            document.getElementById('info-bb').textContent = `Estimasi Berat: ${currentData.bb}`;
+            document.getElementById('info-perkembangan').textContent = currentData.perkembangan;
+
+            const ulPantangan = document.getElementById('info-pantangan');
+            ulPantangan.innerHTML = currentData.pantangan.map(p => `<li>${p}</li>`).join('');
+
+            const divMakanan = document.getElementById('info-makanan');
+            divMakanan.innerHTML = currentData.makanan.map(m => `
+                <div class="bg-green-50 p-3 rounded-lg border border-green-100">
+                    <p class="font-bold text-green-800 text-sm">${m.t}</p>
+                    <p class="text-xs text-green-600 mt-1">${m.d}</p>
+                </div>
+            `).join('');
+
+            const ulVitamin = document.getElementById('info-vitamin');
+            ulVitamin.innerHTML = currentData.vitamin.map(v => `
+                <li class="flex items-center">
+                    <svg class="w-4 h-4 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    ${v}
+                </li>
+            `).join('');
+
+            const divKeluhan = document.getElementById('info-keluhan');
+            divKeluhan.innerHTML = currentData.keluhan.map(k => `
+                <div class="border-l-2 border-purple-300 pl-3">
+                    <p class="font-bold text-gray-700 text-sm">${k.k}</p>
+                    <p class="text-xs text-gray-500 mt-1">💡 Solusi: ${k.s}</p>
+                </div>
+            `).join('');
+        }
+
+        // IMT Calculator
+        function calculateIMT(e) {
+            e.preventDefault();
+            const bb = parseFloat(document.getElementById('imt-bb').value);
+            const tb_cm = parseFloat(document.getElementById('imt-tb').value);
+            const tb_m = tb_cm / 100;
+
+            const imt = bb / (tb_m * tb_m);
+            const imtRounded = imt.toFixed(1);
+
+            let category = "";
+            let colorClass = "";
+            let recommendation = "";
+            let risk = "";
+            let solution = "";
+
+            if (imt < 18.5) {
+                category = "Kurus (Underweight)";
+                colorClass = "bg-blue-100 text-blue-700";
+                recommendation = "12,5 - 18 kg";
+                risk = "Bayi lahir prematur, Berat Badan Lahir Rendah (BBLR), dan ibu rentan mengalami anemia.";
+                solution = "Tingkatkan asupan kalori padat nutrisi (daging, alpukat, telur), makan porsi kecil tapi sering, konsultasikan dengan ahli gizi/dokter kandungan.";
+            } else if (imt >= 18.5 && imt <= 24.9) {
+                category = "Normal";
+                colorClass = "bg-green-100 text-green-700";
+                recommendation = "11,5 - 16 kg";
+                risk = "Risiko komplikasi relatif sangat rendah jika pola gizi dan kenaikan berat badan tetap dijaga dengan stabil.";
+                solution = "Pertahankan pola makan bergizi seimbang, rutin melakukan senam hamil atau jalan kaki ringan, dan jangan lupa minum vitamin kehamilan.";
+            } else if (imt >= 25.0 && imt <= 29.9) {
+                category = "Kelebihan BB (Overweight)";
+                colorClass = "bg-yellow-100 text-yellow-700";
+                recommendation = "7 - 11,5 kg";
+                risk = "Diabetes gestasional, hipertensi (preeklampsia), dan kemungkinan bayi lahir terlalu besar (makrosomia).";
+                solution = "Kurangi makanan tinggi gula/manis & karbohidrat sederhana, perbanyak asupan sayur tinggi serat, dan tetap aktif bergerak dengan panduan dokter.";
+            } else {
+                category = "Obesitas";
+                colorClass = "bg-red-100 text-red-700";
+                recommendation = "5 - 9 kg";
+                risk = "Risiko tinggi preeklampsia parah, sleep apnea (henti napas saat tidur), komplikasi persalinan, dan kemungkinan besar perlu operasi caesar.";
+                solution = "Jangan pernah diet sembarangan! Harus dalam pantauan ketat dokter kandungan. Rutin cek tekanan darah serta kadar gula darah Anda secara berkala.";
+            }
+
+            document.getElementById('imt-placeholder').classList.add('hide');
+            const resultContainer = document.getElementById('imt-result-container');
+            resultContainer.classList.remove('hide');
+            
+            document.getElementById('imt-score').textContent = imtRounded;
+            
+            const badge = document.getElementById('imt-category-badge');
+            badge.textContent = category;
+            badge.className = `inline-block px-3 py-1 rounded-full text-sm font-bold mb-4 ${colorClass}`;
+            
+            document.getElementById('imt-recommendation').textContent = recommendation;
+            document.getElementById('imt-risk').textContent = risk;
+            document.getElementById('imt-solution').textContent = solution;
+        }
+
+    </script>
+</body>
+</html>
