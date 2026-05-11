@@ -89,6 +89,13 @@
                     <div id="nav-links-bunda" class="space-x-4 flex items-center">
                         <button onclick="showView('dashboard')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Beranda</button>
                         <button onclick="showView('imt')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Kalkulator IMT</button>
+                        <button onclick="showView('kontraksi')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base relative">
+                            Kontraksi
+                            <span class="absolute -top-1 -right-2 flex h-3 w-3">
+                              <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+                              <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
+                            </span>
+                        </button>
                         <button onclick="showProfile()" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Profil</button>
                     </div>
                     <!-- Indikator khusus Admin -->
@@ -320,55 +327,69 @@
                 </div>
             </div>
 
-            <!-- Video Edukasi Toggle -->
-            <div class="glass-card rounded-2xl mb-8 overflow-hidden">
-                <button onclick="toggleVideo()" class="w-full p-4 flex justify-between items-center bg-brand-50 hover:bg-brand-100 transition focus:outline-none">
-                    <div class="flex items-center">
-                        <svg class="w-6 h-6 text-brand-500 mr-3" fill="currentColor" viewBox="0 0 24 24"><path d="M19.615 3.184c-3.604-.246-11.631-.245-15.23 0-3.897.266-4.356 2.62-4.385 8.816.029 6.185.484 8.549 4.385 8.816 3.6.245 11.626.246 15.23 0 3.897-.266 4.356-2.62 4.385-8.816-.029-6.185-.484-8.549-4.385-8.816zm-10.615 12.816v-8l8 3.993-8 4.007z"/></svg>
-                        <div class="text-left">
-                            <h3 class="font-bold text-gray-800 text-sm sm:text-base">Video Edukasi Kehamilan</h3>
-                            <p class="text-xs text-gray-500 font-normal">Informasi seputar kehamilan untuk Bunda (Klik untuk melihat)</p>
-                        </div>
-                    </div>
-                    <svg id="video-toggle-icon" class="w-5 h-5 text-gray-500 transform transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
-                </button>
-                <div id="video-container" class="p-4 hide border-t border-brand-100">
-                    <div class="relative w-full overflow-hidden rounded-xl" style="padding-top: 56.25%;">
-                        <iframe class="absolute top-0 left-0 w-full h-full" src="https://www.youtube.com/embed/s397LAv7Kx4" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
-                    </div>
-                </div>
-            </div>
-
             <!-- Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                <!-- Kolom Kiri: Perkembangan -->
+                <!-- Kolom Kiri: Perkembangan & Medis -->
                 <div class="lg:col-span-1 space-y-6">
                     <div class="glass-card rounded-2xl p-6 border-t-4 border-brand-400">
                         <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                             Perkembangan Janin
                         </h4>
-                        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center">
-                            <p class="text-sm text-gray-500 mb-1">Perkiraan Ukuran</p>
-                            <img id="info-gambar-ukuran" src="" alt="Ilustrasi Ukuran Janin" class="w-16 h-16 mx-auto mb-3 drop-shadow-md hide">
-                            <p class="font-bold text-brand-600 text-lg" id="info-ukuran">Sebesar buah X</p>
-                            <p class="text-xs text-gray-400 mt-1" id="info-bb">Estimasi Berat: -</p>
+                        
+                        <!-- Carousel Perkembangan Janin Berdasarkan Minggu -->
+                        <div class="bg-gray-50 rounded-xl p-4 mb-4 text-center border border-gray-100">
+                            <div class="flex justify-between items-center mb-3">
+                                <button onclick="changeFetalImage(-1)" class="bg-white rounded-full p-1.5 shadow-sm text-gray-500 hover:text-brand-500 hover:bg-brand-50 transition border border-gray-200 focus:outline-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"></path></svg>
+                                </button>
+                                <p class="text-sm font-bold text-gray-800 bg-white px-3 py-1.5 rounded-full shadow-sm border border-gray-200 transition" id="fetal-week-label">Minggu ke-?</p>
+                                <button onclick="changeFetalImage(1)" class="bg-white rounded-full p-1.5 shadow-sm text-gray-500 hover:text-brand-500 hover:bg-brand-50 transition border border-gray-200 focus:outline-none">
+                                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"></path></svg>
+                                </button>
+                            </div>
+                            
+                            <!-- Area Gambar Janin -->
+                            <div class="relative rounded-lg overflow-hidden border border-gray-200 mb-3 bg-white w-full h-48 sm:h-56 flex items-center justify-center">
+                                <img id="fetal-carousel-img" src="" alt="Perkembangan Janin" class="object-contain w-full h-full p-1 transition-opacity duration-300">
+                            </div>
+
+                            <!-- Badge Ukuran (Buah/Sayur) -->
+                            <div class="flex items-center justify-center space-x-2 hide bg-brand-50 border border-brand-100 px-3 py-2 rounded-lg inline-flex" id="info-ukuran-container">
+                                <img id="info-gambar-ukuran" src="" class="w-5 h-5 drop-shadow-sm">
+                                <p class="font-bold text-brand-700 text-xs" id="info-ukuran">Sebesar buah X</p>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-2 font-semibold" id="info-bb">Estimasi Berat: -</p>
                         </div>
+                        
                         <p class="text-gray-600 text-sm leading-relaxed" id="info-perkembangan">Deskripsi perkembangan janin akan muncul di sini.</p>
                     </div>
                     
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-yellow-400">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
-                            Pantangan & Hindari
+                    <!-- Jadwal Medis (USG, TT, Lab) -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-500 space-y-5">
+                        <h4 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
+                            <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
+                            Jadwal Medis & Cek Lab
                         </h4>
-                        <ul class="text-sm text-gray-600 space-y-2 list-disc pl-5 marker:text-yellow-500" id="info-pantangan">
-                            <li>Memuat data...</li>
-                        </ul>
+                        
+                        <div class="bg-blue-50 p-3 rounded-lg border border-blue-100">
+                            <p class="text-xs font-bold text-blue-600 uppercase mb-1 flex items-center">🖥️ Jadwal USG</p>
+                            <p class="text-sm text-gray-700" id="info-usg">Memuat data USG...</p>
+                        </div>
+
+                        <div class="bg-pink-50 p-3 rounded-lg border border-pink-100">
+                            <p class="text-xs font-bold text-pink-600 uppercase mb-1 flex items-center">💉 Vaksinasi (Suntik TT)</p>
+                            <p class="text-sm text-gray-700" id="info-tt">Memuat jadwal vaksin...</p>
+                        </div>
+
+                        <div class="bg-indigo-50 p-3 rounded-lg border border-indigo-100">
+                            <p class="text-xs font-bold text-indigo-600 uppercase mb-1 flex items-center">🧪 Cek Laboratorium</p>
+                            <p class="text-sm text-gray-700" id="info-lab">Memuat jadwal lab...</p>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Kolom Tengah: Nutrisi & Keluhan -->
+                <!-- Kolom Tengah & Kanan: Nutrisi, Gaya Hidup, Keluhan -->
                 <div class="lg:col-span-2 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Makanan -->
@@ -382,27 +403,146 @@
                             </div>
                         </div>
 
-                        <!-- Vitamin -->
-                        <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-400">
-                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                                <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
-                                Vitamin Dianjurkan
-                            </h4>
-                            <ul class="text-sm text-gray-600 space-y-2" id="info-vitamin">
-                                <!-- JS Injection -->
-                            </ul>
+                        <!-- Vitamin & Olahraga -->
+                        <div class="space-y-6">
+                            <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-400">
+                                <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
+                                    Vitamin Dianjurkan
+                                </h4>
+                                <ul class="text-sm text-gray-600 space-y-2" id="info-vitamin">
+                                    <!-- JS Injection -->
+                                </ul>
+                            </div>
+
+                            <div class="glass-card rounded-2xl p-6 border-t-4 border-teal-500">
+                                <h4 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
+                                    <svg class="w-5 h-5 mr-2 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                                    Olahraga Aman
+                                </h4>
+                                <p class="text-sm text-gray-600 bg-teal-50 p-3 rounded-lg" id="info-olahraga">Memuat olahraga yang dianjurkan...</p>
+                            </div>
                         </div>
                     </div>
 
-                    <!-- Keluhan -->
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-purple-400">
-                        <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
-                            <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
-                            Keluhan Umum & Solusi
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <!-- Keluhan & Pantangan -->
+                        <div class="glass-card rounded-2xl p-6 border-t-4 border-purple-400">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
+                                Keluhan & Solusi
+                            </h4>
+                            <div class="space-y-4" id="info-keluhan">
+                                <!-- JS Injection -->
+                            </div>
+                            <h4 class="text-md font-bold text-gray-800 mt-6 mb-3 flex items-center">
+                                <svg class="w-4 h-4 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path></svg>
+                                Pantangan
+                            </h4>
+                            <ul class="text-sm text-gray-600 space-y-2 list-disc pl-5 marker:text-yellow-500" id="info-pantangan">
+                            </ul>
+                        </div>
+
+                        <!-- Mitos vs Fakta -->
+                        <div class="glass-card rounded-2xl p-6 border-t-4 border-yellow-400">
+                            <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
+                                <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
+                                Mitos vs Fakta
+                            </h4>
+                            <div class="bg-yellow-50/50 p-4 rounded-xl border border-yellow-100" id="info-mitos">
+                                <!-- JS Injection -->
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Kolom Penuh: Tanda Bahaya & Persiapan -->
+                <div class="lg:col-span-3 space-y-6 mt-4">
+                    <!-- Tanda Bahaya Kehamilan (Ilustrasi AI Visual) -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-red-500 overflow-hidden relative">
+                        <div class="absolute top-0 right-0 p-4 opacity-10">
+                            <svg class="w-32 h-32 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-5h2v5z"></path></svg>
+                        </div>
+                        <h4 class="text-xl font-black text-red-600 mb-2 relative z-10 flex items-center">
+                            🚨 Tanda Bahaya Kehamilan (Segera ke RS!)
                         </h4>
-                        <div class="space-y-4" id="info-keluhan">
+                        <p class="text-sm text-gray-600 mb-6 relative z-10">Jika Bunda mengalami salah satu dari gejala di bawah ini pada usia kehamilan saat ini, segera hubungi bidan atau kunjungi UGD terdekat.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 relative z-10" id="info-bahaya">
                             <!-- JS Injection -->
                         </div>
+                    </div>
+
+                    <!-- Persiapan Persalinan -->
+                    <div class="glass-card rounded-2xl p-6 border-t-4 border-brand-600 bg-brand-50" id="container-persiapan">
+                        <h4 class="text-lg font-bold text-brand-800 mb-2 flex items-center">
+                            <svg class="w-6 h-6 mr-2 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                            Persiapan Persalinan (Klinik / RS)
+                        </h4>
+                        <p class="text-brand-900 text-sm mb-3 font-semibold">Tugas Bunda di fase ini:</p>
+                        <div class="bg-white p-4 rounded-xl shadow-sm border border-brand-200" id="info-persiapan">
+                            <!-- JS Injection -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- VIEW: KONTRAKSI (PENGHITUNG) -->
+        <div id="view-kontraksi" class="w-full max-w-2xl mx-auto hide animate-fade-in">
+            <div class="glass-card rounded-2xl p-6 sm:p-8">
+                <div class="flex items-center mb-6 border-b pb-4">
+                    <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <div>
+                        <h2 class="text-2xl font-bold text-gray-800">Penghitung Kontraksi</h2>
+                        <p class="text-sm text-gray-500">Pantau durasi dan jarak antar kontraksi menjelang persalinan.</p>
+                    </div>
+                </div>
+
+                <!-- Timer Display -->
+                <div class="text-center mb-8">
+                    <div id="contraction-status" class="text-gray-500 font-bold mb-2 uppercase tracking-widest text-sm">Siap Memulai</div>
+                    <div id="contraction-timer" class="text-6xl sm:text-7xl font-black text-gray-800 tabular-nums font-mono drop-shadow-sm mb-6">00:00</div>
+                    
+                    <!-- Main Action Button -->
+                    <button id="btn-toggle-contraction" onclick="toggleContraction()" class="w-full sm:w-2/3 mx-auto bg-brand-500 hover:bg-brand-600 text-white font-black text-xl py-5 rounded-2xl shadow-xl shadow-brand-500/40 transition duration-300 transform active:scale-95 flex justify-center items-center">
+                        <svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                        MULAI KONTRAKSI
+                    </button>
+                </div>
+
+                <!-- Insight/Warning -->
+                <div id="contraction-insight" class="bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl mb-8 hide">
+                    <p class="text-blue-800 text-sm font-semibold flex items-start">
+                        <span class="mr-2 text-xl">💡</span>
+                        <span id="contraction-insight-text">Menunggu data kontraksi...</span>
+                    </p>
+                </div>
+
+                <!-- History Table -->
+                <div class="border-t pt-6">
+                    <div class="flex justify-between items-center mb-4">
+                        <h3 class="font-bold text-gray-800">Riwayat Kontraksi</h3>
+                        <button onclick="clearContractions()" class="text-xs text-red-500 hover:text-red-700 font-bold px-3 py-1 bg-red-50 rounded-lg">Hapus Riwayat</button>
+                    </div>
+                    
+                    <div class="overflow-hidden rounded-xl border border-gray-200">
+                        <table class="w-full text-left text-sm">
+                            <thead class="bg-gray-100 text-gray-600">
+                                <tr>
+                                    <th class="p-3 font-bold">Waktu Mulai</th>
+                                    <th class="p-3 font-bold">Durasi (Lama)</th>
+                                    <th class="p-3 font-bold">Jarak (Interval)</th>
+                                </tr>
+                            </thead>
+                            <tbody id="contraction-list" class="bg-white divide-y divide-gray-100">
+                                <tr>
+                                    <td colspan="3" class="p-6 text-center text-gray-400 italic">Belum ada data kontraksi yang dicatat.</td>
+                                </tr>
+                            </tbody>
+                        </table>
                     </div>
                 </div>
             </div>
@@ -640,24 +780,38 @@
                 ukuran: "Biji Selasih hingga Buah Lemon",
                 gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f34b.svg",
                 bb: "0 - 25 gram",
-                perkembangan: "Masa krusial pembentukan organ vital janin (jantung, otak, sumsum tulang belakang). Plasenta mulai terbentuk untuk menyalurkan nutrisi.",
-                makanan: [
-                    { t: "Kaya Asam Folat", d: "Bayam, brokoli, alpukat, kacang-kacangan." },
-                    { t: "Protein Tinggi", d: "Telur matang, daging tanpa lemak, tempe." },
-                    { t: "Mudah Dicerna", d: "Biskuit jahe, buah segar untuk mengatasi mual." }
+                perkembangan: "<strong>Masa Krusial Pembentukan Janin!</strong><br>Pada fase ini, organ-organ vital si Kecil seperti otak, sumsum tulang belakang, jantung, dan organ dalam lainnya mulai terbentuk. Jantung janin juga sudah mulai berdetak. Selain itu, plasenta (ari-ari) sedang dibangun secara aktif untuk menjadi saluran nutrisi utama janin ke depannya. Karena ini fase pembentukan, sangat penting bagi Bunda untuk menghindari asap rokok, alkohol, obat tanpa resep, dan zat kimia berbahaya.",
+                usg: "<strong>USG Transvaginal/Abdominal (Disarankan di usia 8-12 minggu):</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li>Memastikan kehamilan berada di dalam rahim (mencegah kehamilan ektopik/luar kandungan).</li><li>Melihat detak jantung janin untuk pertama kalinya.</li><li>Menentukan jumlah janin (kembar atau tunggal).</li><li>Menentukan usia kehamilan dan menetapkan HPL (Hari Perkiraan Lahir) yang paling akurat.</li></ul>",
+                tt: "<strong>Suntik Vaksin Tetanus Toxoid (TT 1 & TT 2)</strong><br>Bidan atau dokter akan mengecek riwayat imunisasi Bunda. Jika diperlukan, Bunda akan diberi suntikan TT untuk melindungi bayi dari penyakit Tetanus Neonatorum (infeksi tetanus melalui tali pusat saat lahir). Suntikan TT 2 biasanya diberikan 4 minggu setelah TT 1.",
+                lab: "<strong>Pemeriksaan Darah Rutin & Triple Eliminasi (Wajib Program Pemerintah):</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li><strong>Cek Darah Rutin (Hb):</strong> Mengetahui kadar Hemoglobin untuk mencegah ibu hamil mengalami anemia (kurang darah) yang bisa membahayakan janin.</li><li><strong>Golongan Darah & Rhesus:</strong> Persiapan dini jika sewaktu-waktu membutuhkan donor darah saat persalinan.</li><li><strong>Triple Eliminasi:</strong> Tes skrining untuk HIV, Sifilis, dan Hepatitis B. Bertujuan mencegah penularan penyakit dari ibu ke bayi sejak dini.</li><li><strong>Cek Urine:</strong> Mendeteksi adanya infeksi saluran kemih atau kelebihan protein.</li></ul>",
+                olahraga: "<strong>Tetap Aktif Namun Terukur</strong><br>Bunda boleh jalan santai 15-20 menit di pagi hari. Berjemur pagi juga sangat baik untuk vitamin D alami. Lakukan peregangan ringan dan senam Kegel dasar untuk memperkuat otot panggul. <strong>Catatan:</strong> Hindari olahraga yang membuat Bunda melompat, mengangkat beban berat, atau berisiko terjatuh.",
+                mitosFakta: {
+                    mitos: "Makan nanas muda menyebabkan keguguran pada awal kehamilan.",
+                    fakta: "Nanas memang mengandung enzim bromelain yang dipercaya bisa melunakkan leher rahim. Namun faktanya, jumlah bromelain dalam satu porsi nanas sangat kecil. Bunda butuh makan berkilo-kilo nanas sekaligus agar efeknya terasa. Jika dikonsumsi dalam batas wajar (1-2 potong), nanas sangat aman, menyegarkan, dan kaya akan Vitamin C yang baik untuk Bunda."
+                },
+                bahaya: [
+                    { t: "Pendarahan/Flek Hebat", img: "🩸", c: "bg-red-50 border-red-200 text-red-800" },
+                    { t: "Muntah Parah (Hiperemesis)", img: "🤮", c: "bg-orange-50 border-orange-200 text-orange-800" },
+                    { t: "Nyeri Kram Perut Hebat", img: "😖", c: "bg-yellow-50 border-yellow-200 text-yellow-800" }
                 ],
-                vitamin: ["Asam Folat (Sangat Penting)", "Vitamin B6 (untuk kurangi mual)", "Vitamin D"],
+                persiapan: "<strong>Adaptasi & Pemilihan Tempat Periksa:</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li>Fokuslah pada adaptasi tubuh. Mual, lemas, dan perubahan emosi sangat wajar karena lonjakan hormon kehamilan (hCG).</li><li>Mulailah mencari referensi Bidan, Klinik, atau Dokter Kandungan yang komunikatif dan membuat Bunda merasa nyaman. Hubungan baik dengan tenaga kesehatan sangat membantu kelancaran kehamilan hingga persalinan.</li><li>Selalu sedia camilan sehat di tas untuk mengatasi mual tiba-tiba.</li></ul>",
+                makanan: [
+                    { t: "Kaya Asam Folat (Sangat Penting)", d: "Bayam, brokoli, alpukat, dan kacang-kacangan untuk mencegah cacat tabung saraf janin." },
+                    { t: "Protein Tinggi", d: "Telur ayam matang sempurna, daging ayam/sapi tanpa lemak, tempe, dan tahu." },
+                    { t: "Mudah Dicerna (Pereda Mual)", d: "Biskuit krakers tawar, jahe hangat, dan buah-buahan segar berair seperti jeruk atau semangka." }
+                ],
+                vitamin: ["Asam Folat (Wajib setiap hari)", "Vitamin B6 (Membantu mengurangi rasa mual)", "Kalsium (Jika tidak minum susu hamil)"],
                 keluhan: [
-                    { k: "Mual & Muntah (Morning Sickness)", s: "Makan porsi kecil tapi sering, hindari bau menyengat, minum jahe hangat." },
-                    { k: "Kelelahan & Mengantuk", s: "Istirahat cukup, perbanyak tidur malam, kurangi aktivitas berat." },
-                    { k: "Payudara Nyeri", s: "Gunakan bra yang nyaman dan menyangga dengan baik (tanpa kawat)." }
+                    { k: "Mual & Muntah (Morning Sickness)", s: "Jangan biarkan perut kosong! Makan porsi kecil tapi sering (tiap 2-3 jam). Hindari makanan berbau menyengat. Minum air jahe hangat." },
+                    { k: "Cepat Lelah & Sering Mengantuk", s: "Tubuh sedang bekerja keras membuat plasenta. Jangan dipaksakan, beristirahatlah yang cukup dan perbanyak tidur malam." },
+                    { k: "Payudara Terasa Nyeri & Bengkak", s: "Gunakan bra khusus ibu hamil atau bra katun tanpa kawat yang ukurannya lebih longgar dan menyangga dengan baik." }
                 ],
                 pantangan: [
-                    "Asap rokok dan alkohol",
-                    "Daging, telur, atau ikan mentah/setengah matang (Sushi mentah)",
-                    "Susu tidak dipasteurisasi",
-                    "Kafein berlebihan (>1 cangkir kopi/hari)",
-                    "Obat-obatan tanpa resep dokter"
+                    "Asap rokok (baik perokok aktif maupun pasif) dan minuman beralkohol.",
+                    "Daging, telur, atau ikan mentah/setengah matang (Sushi mentah, telur setengah matang, sate yang kurang matang).",
+                    "Susu segar yang belum dipasteurisasi.",
+                    "Kafein berlebihan (batasi maksimal 1 cangkir kopi/teh per hari).",
+                    "Minum obat-obatan warung tanpa izin dokter/bidan."
                 ]
             },
             {
@@ -665,23 +819,36 @@
                 ukuran: "Buah Apel hingga Kembang Kol",
                 gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f34e.svg",
                 bb: "40 gram - 1.000 gram",
-                perkembangan: "Sering disebut 'fase bulan madu' karena mual mereda. Janin mulai bisa mendengar, menelan, dan rambut mulai tumbuh. Gerakan pertama (quickening) biasanya terasa di minggu 16-22.",
-                makanan: [
-                    { t: "Kaya Kalsium", d: "Susu pasteurisasi, keju, yoghurt, ikan teri." },
-                    { t: "Kaya Zat Besi", d: "Daging merah tanpa lemak, sayuran hijau, kacang merah (cegah anemia)." },
-                    { t: "Omega 3 & DHA", d: "Ikan laut (salmon, sarden) matang sempurna." }
+                perkembangan: "<strong>Fase Bulan Madu Kehamilan!</strong><br>Biasanya keluhan mual dan pusing mulai menghilang dan Bunda merasa lebih berenergi. Organ janin terus matang secara detail. Sidik jari bayi mulai terbentuk, janin mulai berlatih menelan air ketuban, dan rambut halus (lanugo) tumbuh. Hal yang paling ditunggu: Di antara minggu ke-16 hingga 22, Bunda akan mulai merasakan gerakan atau tendangan pertama si Kecil!",
+                usg: "<strong>USG Fetomaternal atau Anatomi (Disarankan di usia 18-22 minggu):</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li>Ini adalah USG paling detail (bisa 2D, 3D, atau 4D) untuk mengecek kelengkapan struktur organ janin dari kepala hingga ujung kaki (otak, wajah, tulang belakang, jantung, ginjal).</li><li>Mengecek letak plasenta (apakah menutupi jalan lahir atau tidak).</li><li>Mengecek volume air ketuban.</li><li>Mengetahui jenis kelamin bayi (jika posisinya mendukung).</li></ul>",
+                tt: "<strong>Lanjutan Vaksin Tetanus</strong><br>Jika Bunda direkomendasikan jadwal TT lanjutan oleh Bidan, ini saat yang tepat untuk melakukannya (Misal: TT 3, jika jarak waktu minimal 6 bulan dari suntikan TT 2 sudah terpenuhi).",
+                lab: "<strong>Skrining Gula Darah & Cek Ulang Hb:</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li><strong>Cek Hb Ulang:</strong> Memastikan ibu tidak anemia seiring volume darah yang terus bertambah drastis di trimester ini.</li><li><strong>Tes Toleransi Glukosa Oral (TTGO):</strong> Dilakukan pada usia 24-28 minggu. Bunda akan diminta meminum cairan gula pekat lalu darahnya diambil. Ini sangat penting untuk mendeteksi Risiko Diabetes Gestasional (kencing manis dalam kehamilan).</li></ul>",
+                olahraga: "<strong>Mulai Olahraga Khusus Ibu Hamil</strong><br>Bunda sangat disarankan berenang, jalan santai sore hari, atau mengikuti kelas Prenatal Yoga/Senam Hamil. Olahraga ini melatih pernapasan dan otot panggul untuk persiapan lahiran. <strong>Catatan:</strong> Karena perut semakin membesar, pusat gravitasi tubuh Bunda berubah. Berhati-hatilah saat berjalan agar tidak kehilangan keseimbangan. Hindari olahraga yang mengharuskan Bunda telentang lama setelah minggu ke-20.",
+                mitosFakta: {
+                    mitos: "Bentuk perut Bunda yang terlihat lonjong/runcing ke depan menandakan bayi laki-laki, sedangkan jika melebar berarti perempuan.",
+                    fakta: "Ini hanyalah mitos belaka. Bentuk perut Bunda 100% ditentukan oleh elastisitas dan kekuatan otot dinding perut Bunda, tinggi badan Bunda, serta posisi janin di dalam rahim. Tidak ada hubungannya sama sekali dengan jenis kelamin bayi. Jenis kelamin hanya bisa dipastikan melalui pemeriksaan USG."
+                },
+                bahaya: [
+                    { t: "Ketuban Pecah / Rembes Dini", img: "💦", c: "bg-blue-50 border-blue-200 text-blue-800" },
+                    { t: "Gerakan Janin Menurun Drastis", img: "📉", c: "bg-gray-100 border-gray-300 text-gray-700" },
+                    { t: "Demam Sangat Tinggi", img: "🤒", c: "bg-red-50 border-red-200 text-red-800" }
                 ],
-                vitamin: ["Zat Besi (Fe)", "Kalsium", "DHA / Minyak Ikan", "Multivitamin Kehamilan"],
+                persiapan: "<strong>Persiapan Keuangan & Perlengkapan:</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li>Mulai buat anggaran dan pisahkan dana khusus untuk biaya persalinan dan dana darurat Rumah Sakit. Cek kembali status keaktifan asuransi atau BPJS Bunda.</li><li>Bunda sudah bisa mulai membuat daftar belanja perlengkapan dasar bayi (pakaian, popok, alat mandi). Menyiapkannya dicicil dari sekarang agar tidak memberatkan secara finansial.</li><li>Mengikuti kelas persiapan laktasi (menyusui) sejak hamil sangat disarankan.</li></ul>",
+                makanan: [
+                    { t: "Kaya Kalsium (Pembentukan Tulang Janin)", d: "Susu hamil pasteurisasi, keju matang, yoghurt, dan ikan teri." },
+                    { t: "Kaya Zat Besi (Penambah Darah)", d: "Daging merah tanpa lemak, sayuran berdaun hijau gelap, dan kacang merah." },
+                    { t: "Omega 3 & DHA (Untuk Otak Janin)", d: "Ikan laut seperti salmon atau sarden (wajib dimasak hingga matang sempurna)." }
+                ],
+                vitamin: ["Zat Besi (Fe) - Wajib untuk cegah anemia", "Kalsium - Mencegah pengeroposan tulang dan gigi ibu", "DHA / Minyak Ikan", "Multivitamin Kehamilan lengkap"],
                 keluhan: [
-                    { k: "Nyeri Punggung/Pinggang", s: "Gunakan sepatu datar, kompres hangat, lakukan senam hamil/yoga ringan." },
-                    { k: "Kram Kaki (terutama malam)", s: "Pijat lembut, luruskan kaki, pastikan asupan kalsium & air putih cukup." },
-                    { k: "Garis hitam di perut (Linea Nigra)", s: "Hal normal akibat hormon, akan pudar setelah melahirkan. Gunakan pelembap." }
+                    { k: "Nyeri Punggung dan Pinggang Bawah", s: "Hindari sepatu hak tinggi, gunakan sepatu datar yang empuk. Kompres hangat bagian yang nyeri. Lakukan senam hamil atau prenatal yoga ringan." },
+                    { k: "Kram Kaki Terutama di Malam Hari", s: "Pijat lembut betis Bunda, luruskan kaki perlahan. Pastikan asupan kalsium dari makanan/suplemen dan minum air putih sudah cukup." },
+                    { k: "Garis Hitam di Perut (Linea Nigra)", s: "Ini adalah hal yang sangat normal akibat hiperpigmentasi hormon kehamilan. Tidak perlu dikhawatirkan, garis ini akan memudar perlahan setelah melahirkan." }
                 ],
                 pantangan: [
-                    "Tidur telentang terlalu lama (bisa menekan pembuluh darah besar)",
-                    "Angkat beban terlalu berat",
-                    "Aktivitas olahraga yang rawan jatuh (berkuda, ski)",
-                    "Sauna atau air panas berendam terlalu lama"
+                    "Tidur dalam posisi telentang terlalu lama (dapat menekan pembuluh darah besar di punggung yang mengalirkan darah ke bayi).",
+                    "Mengangkat benda berat atau menggeser perabotan rumah.",
+                    "Berendam di air panas/sauna terlalu lama yang bisa meningkatkan suhu tubuh ekstrem."
                 ]
             },
             {
@@ -689,24 +856,38 @@
                 ukuran: "Terong hingga Buah Semangka",
                 gambarUkuran: "https://cdnjs.cloudflare.com/ajax/libs/twemoji/14.0.2/svg/1f349.svg",
                 bb: "1.000 gram - 3.500+ gram",
-                perkembangan: "Pematangan fungsi paru-paru dan otak janin sangat pesat. Ruang gerak janin semakin sempit, posisi kepala mulai turun ke arah panggul persiapan persalinan.",
-                makanan: [
-                    { t: "Tinggi Serat", d: "Oatmeal, pepaya matang, sayuran (mencegah sembelit)." },
-                    { t: "Vitamin C", d: "Jeruk, tomat (membantu penyerapan zat besi)." },
-                    { t: "Cairan Ekstra", d: "Air putih minimal 2.5 - 3 liter sehari." }
+                perkembangan: "<strong>Fase Persiapan Lahir!</strong><br>Janin Bunda sedang mengalami pertumbuhan berat badan yang sangat pesat. Otak dan paru-parunya matang dengan sempurna. Karena ukurannya semakin besar, ruang gerak di dalam rahim semakin sempit, sehingga tendangannya akan terasa lebih kuat. Menjelang minggu ke-36, posisi kepala janin biasanya mulai berputar dan turun perlahan memasuki rongga panggul sebagai persiapan kelahiran alami.",
+                usg: "<strong>USG Evaluasi Pertumbuhan Akhir (Rutin mendekati HPL):</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li>Memastikan <em>Taksiran Berat Janin</em> (TBJ) sesuai dengan usia kehamilan (tidak terlalu kecil atau terlalu besar).</li><li>Memastikan posisi janin (apakah kepala di bawah, sungsang, atau melintang) dan apakah ada lilitan tali pusat di leher.</li><li>Mengecek fungsi dan pengapuran plasenta (ari-ari) serta kecukupan volume air ketuban untuk proses persalinan.</li></ul>",
+                tt: "<strong>Suntik Vaksin Akhir & Persiapan Antibodi</strong><br>Suntik TT lanjutan jika disarankan oleh Bidan. Selain itu, Dokter di RS mungkin akan merekomendasikan vaksin batuk rejan (Tdap) di usia 27-36 minggu untuk memberikan imunisasi kekebalan tubuh pasif pada bayi setelah lahir.",
+                lab: "<strong>Evaluasi Akhir Pra-Persalinan:</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li><strong>Cek Hb Terakhir:</strong> Sangat krusial! Memastikan Hb ibu normal sebagai persiapan menghadapi risiko pendarahan saat proses melahirkan.</li><li><strong>Cek Protein Urine:</strong> Mewaspadai tanda-tanda Preeklampsia (keracunan kehamilan akibat tensi tinggi).</li><li><strong>Skrining GBS (Bakteri Streptokokus Grup B):</strong> Dilakukan pada minggu 35-37 melalui usap vagina/dubur untuk mencegah bayi terkena infeksi paru saat melewati jalan lahir.</li></ul>",
+                olahraga: "<strong>Fokus Turunkan Panggul & Relaksasi</strong><br>Perbanyak jalan kaki di pagi/sore hari untuk membantu kepala janin turun merangsang pembukaan rahim. Gunakan <em>Gym Ball</em> (bola senam) untuk latihan goyang panggul (pelvic rocking). Latihan jongkok-berdiri sambil berpegangan juga sangat direkomendasikan. Latih kembali pernapasan relaksasi untuk menahan rasa sakit kontraksi nanti.",
+                mitosFakta: {
+                    mitos: "Minum minyak kelapa atau minyak sayur 1-2 sendok menjelang HPL dapat melicinkan dan melancarkan jalan lahir bayi.",
+                    fakta: "Mitos yang menyesatkan. Saluran pencernaan (tempat minyak diproses lambung ke usus) dan jalan lahir (vagina) adalah dua saluran yang letaknya terpisah dan benar-benar berbeda. Minyak kelapa tidak akan membuat rahim atau vagina menjadi 'licin'. Justru, meminum minyak berlebihan berisiko membuat Bunda sakit perut kronis atau diare menjelang persalinan."
+                },
+                bahaya: [
+                    { t: "Pendarahan / Lendir Darah Segar", img: "🚨", c: "bg-red-100 border-red-300 text-red-900" },
+                    { t: "Kontraksi Hebat & Rutin Dini", img: "⏱️", c: "bg-orange-100 border-orange-300 text-orange-900" },
+                    { t: "Sakit Kepala Hebat & Mata Kabur", img: "😵", c: "bg-purple-100 border-purple-300 text-purple-900" }
                 ],
-                vitamin: ["Kalsium (Terus dilanjutkan)", "Zat Besi", "Vitamin C"],
+                persiapan: "<strong>SIAGA 1 (Waktunya Bersiap!):</strong><br><ul class='list-disc pl-4 mt-1 space-y-1 text-xs'><li><strong>Hospital Bag:</strong> Kemas tas persalinan (isi baju ibu, baju bayi, perlengkapan mandi, pembalut nifas) dan letakkan di tempat yang mudah diraih (seperti di bagasi mobil atau dekat pintu rumah).</li><li><strong>Dokumen:</strong> Siapkan dokumen penting dalam satu map (KTP, KK, Buku KIA, Kartu BPJS/Asuransi).</li><li><strong>Transportasi:</strong> Pastikan kendaraan dan pendamping (suami/keluarga) siap <em>standby</em> 24 jam penuh. Simpan nomor telepon UGD Rumah Sakit/Klinik Bersalin di HP.</li><li>Hafalkan rute jalan tercepat menuju klinik/RS, termasuk mempertimbangkan kemacetan.</li></ul>",
+                makanan: [
+                    { t: "Kaya Serat Alami", d: "Oatmeal, roti gandum, buah pepaya matang, dan sayuran hijau (sangat penting untuk mencegah sembelit jelang persalinan)." },
+                    { t: "Vitamin C Ekstra", d: "Jeruk, tomat, kiwi (membantu memaksimalkan penyerapan zat besi dari makanan)." },
+                    { t: "Cairan Ekstra", d: "Wajib minum air putih minimal 2.5 hingga 3 liter sehari untuk menjaga volume air ketuban." }
+                ],
+                vitamin: ["Kalsium (Tetap dilanjutkan untuk persiapan produksi ASI)", "Zat Besi (Cegah pendarahan saat persalinan)", "Vitamin C"],
                 keluhan: [
-                    { k: "Sering Buang Air Kecil", s: "Kurangi minum 2 jam sebelum tidur, perbanyak siang hari." },
-                    { k: "Sesak Napas & Maag", s: "Makan porsi kecil, duduk tegak setelah makan, ganjal bantal saat tidur." },
-                    { k: "Kontraksi Palsu (Braxton Hicks)", s: "Ubah posisi, minum air hangat, istirahat. (Hubungi dokter jika teratur & nyeri)." },
-                    { k: "Kaki Bengkak (Edema)", s: "Kurangi garam, naikkan posisi kaki saat duduk/tidur, hindari berdiri lama." }
+                    { k: "Sering Buang Air Kecil", s: "Kepala bayi sudah menekan kandung kemih. Kurangi minum air 2 jam sebelum tidur malam agar tidur tidak terganggu, namun pastikan banyak minum di siang hari." },
+                    { k: "Sesak Napas & Asam Lambung Naik", s: "Rahim yang membesar menekan diafragma paru dan lambung. Makan dalam porsi sedikit tapi sering, duduk tegak minimal 30 menit setelah makan, dan ganjal bantal ekstra saat tidur." },
+                    { k: "Kontraksi Palsu (Braxton Hicks)", s: "Perut mengencang sementara. Cobalah ubah posisi duduk/tidur, minum segelas air hangat, dan atur napas. (Jika kontraksi menjadi teratur, makin kuat, dan ada nyeri menjalar ke pinggang, segera gunakan fitur Penghitung Kontraksi!)." },
+                    { k: "Kaki Bengkak (Edema)", s: "Kurangi makanan asin/garam berlebih. Jangan berdiri terlalu lama. Saat duduk atau tidur, ganjal kaki dengan bantal agar posisinya lebih tinggi dari jantung untuk melancarkan aliran darah." }
                 ],
                 pantangan: [
-                    "Bepergian jauh/terbang tanpa persetujuan dokter",
-                    "Tidur telentang mutlak dihindari (biasakan miring ke kiri)",
-                    "Stres dan kecemasan berlebihan menjelang persalinan",
-                    "Menahan buang air kecil (mencegah Infeksi Saluran Kemih)"
+                    "Bepergian jauh (ke luar kota/terbang) tanpa surat persetujuan tertulis dari dokter kandungan.",
+                    "Tidur posisi telentang. Biasakan dan wajibkan diri untuk tidur posisi MIRING KE KIRI agar aliran darah ke janin maksimal.",
+                    "Membaca/menonton cerita horor persalinan yang memicu stres dan kecemasan berlebihan.",
+                    "Menahan buang air kecil (sangat berisiko memicu Infeksi Saluran Kemih pada akhir kehamilan)."
                 ]
             }
         ];
@@ -724,6 +905,54 @@
             isAdmin: false
         };
         let countdownInterval;
+        let currentDisplayWeek = 1;
+
+        // Kumpulan Gambar Perkembangan Janin 1-43 Minggu
+        const fetalImages = {
+            1: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhvRwUahi3H02NJTqkXbIPtoz3M60Adiy4oGCJCOrflm1W3OIARYE0WT3hIUyuSRYmawqrwj9ERE-h09zY6KRVAcpn6ACOfyvKuFISQ4DLZU0mKwNp6O3XZ1bVBoakte9nnRp7MDfRJ2iohrqGQvcvK8ULQ5NSQM71UT_PrjhD1SXmvJTUtcRxMq2Bf41pL/s1408/1.jpeg",
+            2: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg6QmDKjVIg0tEcCZhgAlRdIskd4IxqyzjwkxZf4N-ITM72MDunpyukD525fO-fpgVLbm1pSpIyLre0qLbKHDlRSAp820Zgrts7O2_iJ6RkQ8YVJ4x5ojuC-m53Uwyk688QnWhB3z2Hl0gGJ60fpdifQzaXYzh0AMLn3yN_Uy94fBOLQbPrYRkaPyWb7KxZ/s1408/2.jpeg",
+            3: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgwRxtpjvaa552bCIkbLGNI51x0PGuoG5p9ouurfa1aK9je0o8QkKHSV5DxxIVlwyq0r8kJzWEga51vkIc8bOXzSF0YJAB7TUrPfwES9imcAZxYk-lByAGCFWXA-qQWtHoTM390tM-FtYfpVUx7geHctLeYJaPNfcpNUb32VFv6rj4Xa_cSuEzTFUEYMbU0/s1408/3.jpeg",
+            4: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjzIOgOD1xzh9o6FyPkqaGWDbnBQuYrNNTQGGRETtuBsoJ26WPFP02T3fmXHs0sqQG0locAG3S_xDN41v4JtZ6u8zB2lIoUlP5gVVPrc68dp3DGHXpUErJidF0M9VrJsshpQuGb_uUOINCovt1iqT8-j_X84IXDuyDZAwXG-Hbmej_HWW3WuThlo3hS4Uev/s1408/4.jpeg",
+            5: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEinw_JznR_66n42ePKQzhV3DmnZB9itENiKPfL8TBy5Axlvf6DXJzax7-NQdjrfYdb7FcfU1iB2RXQnpZ-zBGOBsxGLN26Z0P8fXsUBTfNBrwQTvn1ioOCF9gODc1RthordMU5NvKJURcA47m6EH0dIvl3NvXqtlxQX-uEVgVINU1HrOzo-B0mlUV7mfVjU/s1408/5.jpeg",
+            6: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEitxnViwYX7E9wMuhfbiIWruc35XVysDH1mxQvmzUi2vizroB5E6Lh8p7qjU9mzINAvUVGu3jDZ5FoGNGOpPx0hKjjZwsbXPH_f2UFcXvdorYni2S-U5qEciHvTy_DIZdmrLD1oDrw4mDzO7MSLCh_Ycoh-XqSNRV9msT31UITmh3vIfF04E0siFyhpOk09/s1408/6.jpeg",
+            7: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPYnNOoryR1W49yXLk4jBdK8DEx-Dr5wnwGVj1xBTHYa44DQVahddB7Z37NvFiAcJet-P3QploKA9ub10aoUVixFrBzK8MDZZekeI27QXYS8zskZm6hoL2ohLCHkEF4MTCY4secMMHNfujWPL5_9ZTujTwaHOcVcbb-apG7RiLlWnOBPxA5J8uHVL9p8x8/s1408/7.jpeg",
+            8: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjD1qBGq3DSoB9rjLqwHlUMlYs8EcpApelRe-fQj8EuV2G5I0-OXgVA9XAa2JcyL13-Ormneu0JrFgLT6CSLg3oD4MlNM1G_7u_OdYzCVOwkJL_MqRjaCyEWD2XL2LXIvm-2bLw_rS397SvbFlKMNmQ5zkEuzdJQ4st2m4A-dEdvpgVIb_dhmNjdDK8_Jqp/s1408/8.jpeg",
+            9: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiU9S7lc5DyJGK7thfK9A1wpCS1h_BglfMS_cJCRE3c_4BMZDSN8I3HlLXXcfH_HTdWb7rVpnqjpfwoEEAXXd4oyda4uMyL87bVp2JKPh5X8TiGeihDEl3ilgrnGaDy_yX2XSRj9nkphinUrJ0ZM47pyu6nCN7mPGDuRDF2_Ey_zksxc9K7K6LaGE6tu_Qi/s1408/9.jpeg",
+            10: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9Ppu3SH_NFTtG3SAH5mv0WPTBeNSFCA3DmO0S7Nx6th1MDgCYHmAkg4tRl8CzysW6UMgQIbD25k8myRtm74_ZMO3FV2oOjLFX3XmwLQdxpN7skqVEymMbmxvY0MmxGZQ6Qf_Nn77jdNh5tlHfl-0miI5bliQEJdfMCJNWTCTrFjwsBxIJHmR7S1LFfKQ3/s1408/10.jpeg",
+            11: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjyL6E2nKItl8maZVgEprPr2q8V_ICETgcRUOXgproAE8ZmCLC55Ye0EU1kCzAI4aLQNHn_RYlCKTLGER_J5WJP3zt2GtA-eE7xNqNkfRAGR7kcpAu2SWSZ7fyEl7XvGNpgmA2rCIvEj4XS5lNHFk9rz5tfJRR7CDrWume_lI-Cht7CAPAU3D8qwpZ0MLCs/s1408/11.jpeg",
+            12: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjrS-B7Q2l72Ui7fxV0G_2KgE9k2bPOvsvSTKwguV_vhr_sqESyJ4UVCU4CmXxrIPO91uvpQsgSU9FYL_edtwjtQ5ZgsT5NnswCeHxodgI9RoM06p2khey5X9dOzsp8bbfqVxjqnfPLx_uRgoD9bYJHnqcEePdpRnVAG_ZW-acuFwoY53LYKPjoT0-yUAo8/s1408/12.jpeg",
+            13: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi-i-fH81tKwp2nDFX-6IP5uDai1X9hy6lgbyJaFlBxtx7ATXXxSXPLwYTJF79RoYTANCHSok2OPhqqQiJGL3isk9d0EqZz9yOg9swgnBuOJL4Ex7o4xfFwoTJTa4-ZAlv6IJTGeoEAW7XHI5ug8f-7lhQzpl7zNV8huEqc3KpWXA0wsyj8PU43tm6fqoLm/s1408/13.jpeg",
+            14: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8NYoSxHym5RFtMAQcKk82e2wVn_fA2uy9i4z9hUY8vMFE2Ve_OXe4empUqGWkFSWiFJbkFXAwOTfJg88y_Fo1No6bV0rO_lCM6uGQA3oLruH3vYWUHyHBeNP69kfS3ue6czNgF7RLNRMVMc4C1jYCOHeIJyDmWQQiNrVd8OYo1lHpRDql7yZ6ctEcpoQP/s1408/14.jpeg",
+            15: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiD98OhVzd4xOH-aNoJsqIryGJltfXTUR-vvDYXgdrXRfYYe5jJlYNhsvmk7WQemBY9YmxW4Di0SQZoWEhsAK-WE9K9FI3TkB2gpPyn2X6Xb1TcUhweVNhDoNnUCeoPAWi3UuduuVdelNxJWvuooyQXKuNWyeLwR4LSQZpeY7rs-uENrFwyDNfNmcObv5XP/s1408/15.jpeg",
+            16: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhPcq69XOA9bH_-vpIbthqmTru7rIv8vjRRHdUbATHDEbEjUN_E0R-WpjypAWeaP41xGb9-dXcMKJ9l4PDfGTRSFzHe7P2QTJSCAOtsuyF1bJOZ0pblXkGsDhkbJ0O_VXHxJMv7Bm1I9vmvPeBjLCoJIlL7hn9T0bHx8OFQwMCCwNq9UpH_LBLBctD7IOj0/s1408/16.jpeg",
+            17: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEj8-SzZJambkdKUEeecUurA0F6bSNyb8YRp3eJHttC7r_MSixYrBq2LjOXAeoMUWGUdk84pVLsZmYWtyX3t0YjYACXxSNXoDglSvj_Er0EILdIxZ02wuy9KxrAYdl8kAcRlIsob39hjxhSf7znd-2jXBDh5MR6pzRbWcu2ngBXRrcMsUx6rkbnxPZ6l6ewL/s1408/17.jpeg",
+            18: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhOiJ6yha6ec6KFnVCnmJ7cI6JiSijijOymlw6s8yRxhNwHYYdL7WpqQ3A_j1KiEEqXYjotH4bRqygG5FBM-pBFj8n8QgYfO2Qz4_RcC1S1oRwjfDeN8GUXtVaptcWAZQjnV8278qNiDP-SqfslWg-sOqWE79ZrAFZE6ykvke3CmKHtbr7Smrb65-Wp0l6_/s1408/18.jpeg",
+            19: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjpoHb8lZb-GBtFqvTx3s67e_AyylLy4wiJrhSoDtvUhIrp1kdZC1fq4NMMndllL4A71BWUhdRJiBprshweYipzcel5a16Dg3Sg1nbfBfdqG-EoFFd2Ymqzgi4JEvASzwseW7qfx3pWc-YYhZwITPJM-fH1H1Pr3ECZFrhc1VUaWehFcPcR5X02DQpbJrEV/s1408/19.jpeg",
+            20: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjd-IVDuRIBr4mZlwEQQLsP3vfLU4-v1kTsmLo8RpfpzFKLQqoaU7pkM-fZp1Nhm4ONtTqhDtEdIAwIc4XUdQQEpIFsvrHx6SgmCrU0fx4ZdSTxy-gsWGnnQhCpD5ZnZt4A-coLEF126SMvRDhM-HVUDXTVVVqQNtQjD99b3pqN8HpBWdEBgV322FBLfrDe/s1408/20.jpeg",
+            21: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEga63ZixJN5YsVsGSD32LiHbBTrJp9ZdpcWevWx341r7wA6EsGR0IOwcyej6QlDEoW8l6VXfhBMoKd8TL2U-3hat225knINDSgh-Q3ocmR5NQZloKS6sYxxETH0Y7MyrCwquFoeIZJ-sJIMZkbu64IcdxXvnzFX7sUlVpxv23Aj-akqlrC65fMzIKTRzgmo/s1408/21.jpeg",
+            22: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5-mmAP9AuxW_I8InmwjU7aW5tJyWcfk9WLFQGuHaJnwoPWZjHb7iYmVWSfD9Jih_sHmcYNaJ5DAn108_F3E93qHdLXa9cnRAsZKprdQjpEe47REmr04CzqSCrBrN3qgoieQVZ39vbe30ahi8IfgiP8XItC-ePhuRTz78TkECqvx_hDpLSFtY9XKIFyQXB/s1408/22.jpeg",
+            23: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9QgWxah7pHQg9vaJuLn7NAIKlXCedbPsyzW5h9X35cEm7xp2djvEiIL1NZcB6DTnxDXX3U_FtDoRu2PeADdfNPMNm_sVI45qQKOQf3Dpnk1MXiLXVvkXs8yxDr5tyo0jOxVb8hIuY9HAzn_2ubpG9tvb2nfutp5jkgBTDDxP2s2vQX5MM29o2HL0PE1bM/s1408/23.jpeg",
+            24: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEg9QgWxah7pHQg9vaJuLn7NAIKlXCedbPsyzW5h9X35cEm7xp2djvEiIL1NZcB6DTnxDXX3U_FtDoRu2PeADdfNPMNm_sVI45qQKOQf3Dpnk1MXiLXVvkXs8yxDr5tyo0jOxVb8hIuY9HAzn_2ubpG9tvb2nfutp5jkgBTDDxP2s2vQX5MM29o2HL0PE1bM/s1408/23.jpeg",
+            25: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqQuIEb6dBgeFOUH1JqfvWpre0_pi-TTMnCzT_Xx_VQmHbFbLfpxRS4j9UbIes4IoecB_1qMbvoc0JRqcTd754aJEU83ks1HCr8lXxK2dh2iqlQkQAxds8Qb6o9I1wDvzE4le3N6YuQdwcSRqxmmGhzv1v1L5TqAC5FDIVNmRe2RiQz2Q9wQ_MG4OfwC5Z/s1408/25.jpeg",
+            26: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgqQuIEb6dBgeFOUH1JqfvWpre0_pi-TTMnCzT_Xx_VQmHbFbLfpxRS4j9UbIes4IoecB_1qMbvoc0JRqcTd754aJEU83ks1HCr8lXxK2dh2iqlQkQAxds8Qb6o9I1wDvzE4le3N6YuQdwcSRqxmmGhzv1v1L5TqAC5FDIVNmRe2RiQz2Q9wQ_MG4OfwC5Z/s1408/25.jpeg",
+            27: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhDYM5BMx6nFpIrPBEYfY7MpAsJLi3IVkLc9NCTUxnF5bizzU-B7QBUPM5ZuRmQxF0Pc-ERBX1UrGbBXTmdOtjDpJZ2ZqbQUcymDHbqdaYf6st8VH6ziTY54G6tJRNqciLGok6YHfF796Nyakr1Z3XO7An2B4Oj8hwu13srXD24Zvq4YbL85jx-gsMm7Dq8/s1408/27.jpeg",
+            28: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgbloRCzySNCHHsaSJLdrJmmG8WHu9jA2hJDbQozaQX17tW3XVWYxRjYxaI8enk8Y8SrpZa_D5wBvfkm013SOkEjk5Q7G_9U0oZ-0FCA4Y0BGuV1vdME1CZwFrbmA5f0fsbJBhq2ypMBbPOLMHXPGItQ7gOMgjZlcDLXs62NNq4-puXVwhktUN5cnntpdxX/s1408/28.jpeg",
+            29: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiRjWsPNxFgo8qS7uCHOpy0rRPILadz0imdHkBcFGsoDyrndXGbiuSNn5eA7I3daYdKRaVpDn-ufXjdDD2-AVYG-bx33GLdHD8uoWcXgBNe_7iIowIuygyEwRzfLlcsV74fXkmsCh4iGs5QsiS00zFkAQvalLGlKM7W3kFSFaT3AyMZGEPrk2Esew6ca1ul/s1408/29.jpeg",
+            30: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjGMNnY0FyUjeWfBmMd7eZNt8qhk6CTk0qPzz1gKD0QXVhM-UighyphenhyphenYS-Kt3r1KZ30HMQQiQlK5H8_fj60ZQbFqFjf2eKTG_bdIUYfPIoVorrI_oHoZL2sxmXAbYENa37uMBsYkkzUcLTE0-q-IjKoSrVvF8-LeuRt1m-VTXKr0PCyBNp40eRpsPYyxNq26p/s1408/30.jpeg",
+            31: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgWziksMgPyjWWZ_QaUkJ8jR28zjxJuenlbSLr-Yt4uGWpxk38Qph6gpFVL5MdZTVURXGdYis4t9Cn0tjzMpciD72ctTFX6a_1o1P36EoG2B8QxbmdTjR6JVuXJH3sUPsO_-r9CfAvDXYbUr5dF2rA4SWRnCxyIg0d4PAlBR1kS2DRTGur3CwF6hAyvgaBw/s1408/31.jpeg",
+            32: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjxJOXp9CQzCyJPNlNQtbLud9by7u1aKufhKZy5_BoMqIKTxx2wHpXD0ikeGI7ZvqHzvgEI0hd3Cn1cR2whQmsNUxuMCCjT3I3iXb-LC-Q1hcIO6gS7_JmRkjaiDp8x1F5GqaUdqtjKhR-fvvl4GfDGbTod5JDzisCxTVimtNdREZHumjYTUd4Fmw94fbnR/s1408/32.jpeg",
+            33: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjh_AoCt7QspBRtEKXMaML3DgFrbtm3ULA3Qh-JLBFFhU3Sj7BYoNgJtvVsfSxrwpVfW0rri_i8KZbhsAwuc5pAnalqubc64laE6FHmt3oFNcDfnq47PytpFad_3RhJ8JPuwF7mjwQ-NkRUaiKcPMOAd1qfsJou9u3uvziDkG1YNyLnjcMBuAXccZgOJBjN/s1408/33.jpeg",
+            34: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEimo0ZhSeZcSUIsLR0NMlHHsr_xNRUGScAZZfx4cWBZDqK6b39_e4j0r-zRMna2yYROt3X4W2fcKEezJyvSNVL8Y1k3xAX27NxHTFh1RiPoAvO1t3HH5bNXDEJzPX4X2EN7JniEnAavyQ1EzOUQ7d8s-BJACzyNIHKqZAfuQv8UdK7dr3mYUEW2f-Z4HmAH/s1408/34.jpeg",
+            35: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgB93Yfq_kSRzDewVEhV-8HYDYzwwVkWE0rkcevjndsdRwhFKt21ECCJHb7s9NEkRCJWGvmrXpc_XxG_BbhaHFgGMFKYfiLNfPo9lJTFf9Ms677kZGybE-kZgawUjYXNRnkhyphenhyphenesLFEmm_ZKkNT-WGtBtFEcTj2zqGW9iwqA7_y04WqRWexBbV8DTrsohu1a/s1408/35.jpeg",
+            36: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhCUlBiYNO_IuS-x1ur71LiJyAJPA1bErHg9hRdcCxMp9WRSyINx4ks5EKmOvwWbpdh4DtSXtmJlXWW_MfKHeXIo8deDIZwX9ZXfFuh0bve5jNsXugC7RbHAMNOiXes3KJBFs8cvrTCxnB3x6_dkcuJntbaj9DVhPwkz9RT53KxKrVJ_RD754oJLNc7PcCQ/s1408/36.jpeg",
+            37: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEhHJ4O-kosWD7tF3LQJL3sxHmDhLfmDPqp_Xs3wPhs16QHObxjR0Pu2KA63IrTMf9011-14rQY7o9kQHS_tt2ijR5c2b_FZdmGgzjpOgx7874b-h2c4M11phwuJ-U3lN5D0OXxXYgMgp9g371fCu_5kkG724fUPP739t29F22d3EAnKTIPBlNistFKsc51h/s1408/37.jpeg",
+            38: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEiO4y7SWx0kvbSpyucZ6k8LbqQLnYtuc57LjREFVr1d-jvxYDEfm4N0wdjXIVyLhzLe7kcUf9wIbpS6cgQxCnat7rC_41J7kMTs_Fc1AiCcD3uJFSfxrhnPQ5WG-B0bbJVK7xOuB5ddWnDmwCEiX4wveBoLYRUc2tiwgINWeIPsIt3vdmcXkLsa4t_h6ngu/s1408/38.jpeg",
+            39: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEizZur0TGrLhKdaW_Zv3gaR7CQ21fq8jEltmtKdVUbMKxUMJE8Yts30OYmBMnW2EvhhvvlG2tYox4ZCYSSeJB75pG2I0HxCbeFK5bZTj-9jnblOY4mN9-neXZm-Vj6T1bYZwWTx7eFqyeXLjwRNjw5Rr5p691Qr_KatcUxO8Cuy9bakPsq-wcMNHVRkOtdC/s1408/39.jpeg",
+            40: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEi5_0k0VYPV0u4XZKRoadcQKLaweiRYLVqyWL-AJQ7hBvZU02k0W-Z2S-qLZnsudMU4o3jS5AljYmy-g4b4YwMcbl1CEArRdNsFJLoK-kQUiNZQoLsqptlzwQJzSyPoHD-N82ThjkiK4dKP3v8FLFoDjNJEWZxgz_90fQ8MMknD4_R7zIhrA6HaauP4-vfB/s1408/40.jpeg",
+            41: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEgxtiKwrx74vIJcERQ90VQJruJljzEojNsqnVEEiX3jKoWQ7pHtzwZx_FQbOvm_o9rlcH2lHS7zaMLCVCKyGws5SgEuwZSYYAilfCOg6TWWrUd59QbrpDFgYGSTOaNpgw3lbqSYvBoWB5LXpHCbkoAxJkI1aEpBncMdl2JZJq7bMFSo5_Tybo75Z78k0No5/s1408/41.jpeg",
+            42: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEirimChCb51FYaF3kKl8KdN9N6-Brvj30YMSe42PDntkOi5JD0XxUy9cyBMdOwEGIGuQuxE_sq77lubT9QCLqLqsRwUXKKN8-gEO8DGjpwTGyDckAHRGPMdphV5dMC7yWtBS_2arivO_c_qddHrHDndOmsomnxzdV0RDhyyBubkiLxaIAnFFwXR1KaEvcaz/s1408/42.jpeg",
+            43: "https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjD9fKkeyC4b9JvU_dklzE8t4hAQrrvzQ3xp4IhrqUqYVCCwWwtaE7xB6fRI3XzMsYN95UAbKdBxBJtmrGoxWiGyCDg-VNsSQQ7LYCsf4tc65IgoFUR7uFzmXbs5ZVGvUkzmgpa9w2t96IZ_y8USjoayOQuXCB12H-zh7ZMlBDDu9VDUjxEdsy_02u1TwRx/s1408/43.jpeg"
+        };
 
         // UI Management
         function showView(viewId) {
@@ -733,6 +962,7 @@
             document.getElementById('view-imt').classList.add('hide');
             document.getElementById('view-profile').classList.add('hide');
             document.getElementById('view-admin').classList.add('hide');
+            document.getElementById('view-kontraksi').classList.add('hide');
 
             const navMenu = document.getElementById('nav-menu');
             const navBunda = document.getElementById('nav-links-bunda');
@@ -752,18 +982,6 @@
             }
 
             document.getElementById(`view-${viewId}`).classList.remove('hide');
-        }
-
-        // Video Toggle Function
-        function toggleVideo() {
-            const container = document.getElementById('video-container');
-            const icon = document.getElementById('video-toggle-icon');
-            container.classList.toggle('hide');
-            if (container.classList.contains('hide')) {
-                icon.classList.remove('rotate-180');
-            } else {
-                icon.classList.add('rotate-180');
-            }
         }
 
         // Init App (Sekarang menggunakan mode async karena butuh loading ke Google Sheets)
@@ -1121,44 +1339,109 @@
 
             document.getElementById('dash-trimester').textContent = currentData.name;
             
+            // Inisialisasi Carousel Gambar Janin (Default: Minggu Saat Ini)
+            currentDisplayWeek = Math.max(1, Math.min(43, state.weeks));
+            if(state.weeks === 0) currentDisplayWeek = 1;
+            updateFetalCarouselUI();
+
+            // Atur Ikon Ukuran (Buah) di Bawah Gambar
             const imgUkuran = document.getElementById('info-gambar-ukuran');
+            const containerUkuran = document.getElementById('info-ukuran-container');
             if (currentData.gambarUkuran) {
                 imgUkuran.src = currentData.gambarUkuran;
-                imgUkuran.classList.remove('hide');
+                containerUkuran.classList.remove('hide');
             } else {
-                imgUkuran.classList.add('hide');
+                containerUkuran.classList.add('hide');
             }
 
             document.getElementById('info-ukuran').textContent = currentData.ukuran;
             document.getElementById('info-bb').textContent = `Estimasi Berat: ${currentData.bb}`;
-            document.getElementById('info-perkembangan').textContent = currentData.perkembangan;
+            // MENGGUNAKAN innerHTML agar tag <br>, <strong>, dan <ul> terbaca sebagai formatting
+            document.getElementById('info-perkembangan').innerHTML = currentData.perkembangan;
+
+            // --- DATA BARU ---
+            document.getElementById('info-usg').innerHTML = currentData.usg;
+            document.getElementById('info-tt').innerHTML = currentData.tt;
+            document.getElementById('info-lab').innerHTML = currentData.lab;
+            document.getElementById('info-olahraga').innerHTML = currentData.olahraga;
+            
+            document.getElementById('info-mitos').innerHTML = `
+                <p class="text-sm text-yellow-800 font-bold mb-2">❌ Mitos: <span class="font-normal">${currentData.mitosFakta.mitos}</span></p>
+                <div class="w-full h-px bg-yellow-200 my-2"></div>
+                <p class="text-sm text-green-700 font-bold leading-relaxed">✅ Fakta: <span class="font-normal text-gray-700">${currentData.mitosFakta.fakta}</span></p>
+            `;
+
+            const divBahaya = document.getElementById('info-bahaya');
+            divBahaya.innerHTML = currentData.bahaya.map(b => `
+                <div class="${b.c} border rounded-xl p-4 flex flex-col items-center justify-center text-center shadow-sm transform transition hover:scale-105">
+                    <span class="text-5xl mb-2 drop-shadow-md">${b.img}</span>
+                    <span class="font-bold text-sm mt-1 leading-tight">${b.t}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('info-persiapan').innerHTML = `<div class="text-gray-700 text-sm leading-relaxed">${currentData.persiapan}</div>`;
+            // ------------------
 
             const ulPantangan = document.getElementById('info-pantangan');
-            ulPantangan.innerHTML = currentData.pantangan.map(p => `<li>${p}</li>`).join('');
+            ulPantangan.innerHTML = currentData.pantangan.map(p => `<li class="mb-1">${p}</li>`).join('');
 
             const divMakanan = document.getElementById('info-makanan');
             divMakanan.innerHTML = currentData.makanan.map(m => `
                 <div class="bg-green-50 p-3 rounded-lg border border-green-100">
-                    <p class="font-bold text-green-800 text-sm">${m.t}</p>
-                    <p class="text-xs text-green-600 mt-1">${m.d}</p>
+                    <p class="font-bold text-green-800 text-sm mb-1">${m.t}</p>
+                    <p class="text-xs text-green-700 leading-snug">${m.d}</p>
                 </div>
             `).join('');
 
             const ulVitamin = document.getElementById('info-vitamin');
             ulVitamin.innerHTML = currentData.vitamin.map(v => `
-                <li class="flex items-center">
-                    <svg class="w-4 h-4 mr-2 text-blue-500 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
-                    ${v}
+                <li class="flex items-start">
+                    <svg class="w-4 h-4 mr-2 text-blue-500 flex-shrink-0 mt-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
+                    <span class="leading-snug">${v}</span>
                 </li>
             `).join('');
 
             const divKeluhan = document.getElementById('info-keluhan');
             divKeluhan.innerHTML = currentData.keluhan.map(k => `
-                <div class="border-l-2 border-purple-300 pl-3">
-                    <p class="font-bold text-gray-700 text-sm">${k.k}</p>
-                    <p class="text-xs text-gray-500 mt-1">💡 Solusi: ${k.s}</p>
+                <div class="border-l-2 border-purple-300 pl-3 mb-4">
+                    <p class="font-bold text-gray-800 text-sm mb-1">${k.k}</p>
+                    <p class="text-xs text-gray-600 leading-snug"><span class="font-bold text-purple-600">💡 Solusi:</span> ${k.s}</p>
                 </div>
             `).join('');
+        }
+
+        // Fungsi Carousel / Slider Gambar Janin
+        function changeFetalImage(offset) {
+            currentDisplayWeek += offset;
+            
+            // Batasi navigasi dari minggu 1 sampai 43
+            if (currentDisplayWeek < 1) currentDisplayWeek = 1;
+            if (currentDisplayWeek > 43) currentDisplayWeek = 43;
+
+            updateFetalCarouselUI();
+        }
+
+        function updateFetalCarouselUI() {
+            const imgEl = document.getElementById('fetal-carousel-img');
+            const labelEl = document.getElementById('fetal-week-label');
+            
+            // Ubah sumber gambar
+            if (fetalImages[currentDisplayWeek]) {
+                imgEl.src = fetalImages[currentDisplayWeek];
+            } else {
+                imgEl.src = ""; // Fallback jika kosong
+            }
+
+            // Atur gaya label jika yang ditampilkan adalah minggu "Saat Ini"
+            if (currentDisplayWeek === state.weeks || (state.weeks === 0 && currentDisplayWeek === 1)) {
+                labelEl.innerHTML = `Minggu ke-${currentDisplayWeek} <span class="text-[10px] text-brand-500 font-black ml-1 uppercase bg-brand-100 px-2 py-0.5 rounded-full">Saat Ini</span>`;
+                labelEl.classList.add('border-brand-300', 'bg-brand-50', 'text-brand-800');
+                labelEl.classList.remove('text-gray-800', 'bg-white');
+            } else {
+                labelEl.innerHTML = `Minggu ke-${currentDisplayWeek}`;
+                labelEl.classList.remove('border-brand-300', 'bg-brand-50', 'text-brand-800');
+                labelEl.classList.add('text-gray-800', 'bg-white');
+            }
         }
 
         // IMT Calculator
@@ -1216,6 +1499,165 @@
             document.getElementById('imt-recommendation').textContent = recommendation;
             document.getElementById('imt-risk').textContent = risk;
             document.getElementById('imt-solution').textContent = solution;
+        }
+
+        /* ========================================================================
+        FITUR PENGHITUNG KONTRAKSI
+        ======================================================================== */
+        let contractionState = {
+            isActive: false,
+            startTime: null,
+            timerInterval: null,
+            records: [] // Array of { start: date, duration: ms, interval: ms }
+        };
+
+        function toggleContraction() {
+            const btn = document.getElementById('btn-toggle-contraction');
+            const timerEl = document.getElementById('contraction-timer');
+            const statusEl = document.getElementById('contraction-status');
+            
+            if (!contractionState.isActive) {
+                // START CONTRACTION
+                contractionState.isActive = true;
+                contractionState.startTime = new Date();
+                
+                // Update Button UI to STOP mode
+                btn.innerHTML = `<svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 10a1 1 0 011-1h4a1 1 0 011 1v4a1 1 0 01-1 1h-4a1 1 0 01-1-1v-4z"></path></svg> HENTIKAN KONTRAKSI`;
+                btn.classList.remove('bg-brand-500', 'hover:bg-brand-600', 'shadow-brand-500/40');
+                btn.classList.add('bg-red-500', 'hover:bg-red-600', 'shadow-red-500/40', 'animate-pulse');
+                
+                statusEl.textContent = "KONTRAKSI SEDANG BERLANGSUNG...";
+                statusEl.classList.add('text-red-500');
+
+                // Start Timer
+                contractionState.timerInterval = setInterval(() => {
+                    const now = new Date();
+                    const diff = now - contractionState.startTime;
+                    const mins = Math.floor(diff / 60000);
+                    const secs = Math.floor((diff % 60000) / 1000);
+                    timerEl.textContent = `${String(mins).padStart(2, '0')}:${String(secs).padStart(2, '0')}`;
+                }, 1000);
+
+            } else {
+                // STOP CONTRACTION
+                clearInterval(contractionState.timerInterval);
+                contractionState.isActive = false;
+                
+                const endTime = new Date();
+                const durationMs = endTime - contractionState.startTime;
+                
+                // Calculate Interval (Distance from PREVIOUS contraction start to THIS contraction start)
+                let intervalMs = null;
+                if (contractionState.records.length > 0) {
+                    const lastRecord = contractionState.records[0]; // records is unshifted (newest first)
+                    intervalMs = contractionState.startTime - lastRecord.start;
+                }
+
+                // Save Record
+                contractionState.records.unshift({
+                    start: contractionState.startTime,
+                    duration: durationMs,
+                    interval: intervalMs
+                });
+
+                // Reset UI
+                btn.innerHTML = `<svg class="w-8 h-8 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg> MULAI KONTRAKSI`;
+                btn.classList.add('bg-brand-500', 'hover:bg-brand-600', 'shadow-brand-500/40');
+                btn.classList.remove('bg-red-500', 'hover:bg-red-600', 'shadow-red-500/40', 'animate-pulse');
+                
+                statusEl.textContent = "MENUNGGU KONTRAKSI SELANJUTNYA";
+                statusEl.classList.remove('text-red-500');
+                timerEl.textContent = "00:00";
+
+                renderContractionList();
+                analyzeContractions();
+            }
+        }
+
+        function formatTimeSpan(ms) {
+            if (!ms) return "-";
+            const mins = Math.floor(ms / 60000);
+            const secs = Math.floor((ms % 60000) / 1000);
+            if (mins > 0) return `${mins}mnt ${secs}dtk`;
+            return `${secs} dtk`;
+        }
+
+        function renderContractionList() {
+            const tbody = document.getElementById('contraction-list');
+            
+            if (contractionState.records.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="3" class="p-6 text-center text-gray-400 italic">Belum ada data kontraksi yang dicatat.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = contractionState.records.map((rec, index) => {
+                const timeStr = rec.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
+                return `
+                    <tr class="hover:bg-gray-50">
+                        <td class="p-3 font-semibold text-gray-800">${timeStr}</td>
+                        <td class="p-3 text-brand-600 font-bold">${formatTimeSpan(rec.duration)}</td>
+                        <td class="p-3 text-gray-500">${formatTimeSpan(rec.interval)}</td>
+                    </tr>
+                `;
+            }).join('');
+        }
+
+        function clearContractions() {
+            if(confirm("Hapus semua riwayat hitungan kontraksi Anda?")) {
+                contractionState.records = [];
+                renderContractionList();
+                document.getElementById('contraction-insight').classList.add('hide');
+                document.getElementById('contraction-status').textContent = "SIAP MEMULAI";
+            }
+        }
+
+        function analyzeContractions() {
+            const insightBox = document.getElementById('contraction-insight');
+            const insightText = document.getElementById('contraction-insight-text');
+            
+            if (contractionState.records.length < 2) {
+                insightBox.classList.remove('hide');
+                insightText.textContent = "Catat minimal 2-3 kontraksi berturut-turut agar sistem dapat menganalisis polanya.";
+                insightBox.className = "bg-blue-50 border-l-4 border-blue-500 p-4 rounded-r-xl mb-8";
+                return;
+            }
+
+            // Ambil 3 data terakhir (jika ada)
+            const recent = contractionState.records.slice(0, 3);
+            let avgDuration = 0;
+            let avgInterval = 0;
+            let countInterval = 0;
+
+            recent.forEach(r => {
+                avgDuration += r.duration;
+                if (r.interval) {
+                    avgInterval += r.interval;
+                    countInterval++;
+                }
+            });
+
+            avgDuration = avgDuration / recent.length;
+            avgInterval = countInterval > 0 ? avgInterval / countInterval : 0;
+
+            // Rumus umum 5-1-1 (Interval 5 menit, Durasi 1 menit, berlangsung 1 jam)
+            const isDurationLong = avgDuration >= 45000; // >= 45 detik
+            const isIntervalShort = avgInterval > 0 && avgInterval <= 360000; // <= 6 menit
+
+            insightBox.classList.remove('hide');
+
+            if (isDurationLong && isIntervalShort) {
+                // Warning! Persalinan dekat
+                insightBox.className = "bg-red-50 border-l-4 border-red-500 p-4 rounded-r-xl mb-8 animate-pulse";
+                insightText.innerHTML = "<strong class='text-red-700'>SIAGA PERSALINAN!</strong><br>Kontraksi Bunda sudah sangat teratur (jarak ~5 menit) dan kuat (durasi ~1 menit). Segera hubungi Bidan atau berangkat ke Rumah Sakit/Klinik Bersalin sekarang juga!";
+            } else if (avgInterval > 0 && avgInterval <= 600000) { // <= 10 menit
+                // Peringatan
+                insightBox.className = "bg-yellow-50 border-l-4 border-yellow-500 p-4 rounded-r-xl mb-8";
+                insightText.innerHTML = "<strong class='text-yellow-700'>Mulai Teratur.</strong><br>Kontraksi mulai intens dengan jarak di bawah 10 menit. Persiapkan tas persalinan dan beri tahu pendamping Bunda untuk berjaga-jaga.";
+            } else {
+                // Belum teratur (Braxton Hicks kemungkinan)
+                insightBox.className = "bg-green-50 border-l-4 border-green-500 p-4 rounded-r-xl mb-8";
+                insightText.innerHTML = "<strong class='text-green-700'>Kontraksi Belum Teratur.</strong><br>Jarak kontraksi masih renggang atau durasi masih singkat. Ini bisa jadi kontraksi palsu (Braxton Hicks). Cobalah minum air hangat, ganti posisi, dan beristirahat.";
+            }
         }
 
     </script>
