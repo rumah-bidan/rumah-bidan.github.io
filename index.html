@@ -5,13 +5,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Rumah Bidan - Monitoring Kehamilan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Nunito:wght@300;400;600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;800&display=swap" rel="stylesheet">
     <script>
         tailwind.config = {
             theme: {
                 extend: {
                     fontFamily: {
-                        sans: ['Nunito', 'sans-serif'],
+                        sans: ['Plus Jakarta Sans', 'sans-serif'],
+                        display: ['Playfair Display', 'serif'],
                     },
                     colors: {
                         brand: {
@@ -32,151 +34,463 @@
         }
     </script>
     <style>
-        body { background-color: #fdf2f8; }
-        .hide { display: none !important; }
-        .glass-card {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05), 0 2px 4px -1px rgba(0, 0, 0, 0.03);
-        }
-        /* Custom scrollbar */
-        ::-webkit-scrollbar { width: 6px; }
-        ::-webkit-scrollbar-track { background: transparent; }
-        ::-webkit-scrollbar-thumb { background: #fbcfe8; border-radius: 10px; }
-        ::-webkit-scrollbar-thumb:hover { background: #f472b6; }
-        
-        /* Animasi Countdown Real-time */
-        @keyframes heartbeat {
-            0% { transform: scale(1); }
-            10% { transform: scale(1.05); }
-            20% { transform: scale(1); }
-            100% { transform: scale(1); }
-        }
-        .animate-heartbeat {
-            animation: heartbeat 1s infinite;
+        :root {
+            --brand-50: #fff1f7;
+            --brand-100: #ffe4f0;
+            --brand-200: #ffc7df;
+            --brand-300: #ff99c3;
+            --brand-400: #fb5fa0;
+            --brand-500: #ec4899;
+            --brand-600: #d61f77;
+            --brand-700: #b51661;
+            --brand-800: #95164f;
+            --brand-900: #7b1744;
+            --ink: #1f2937;
+            --muted: #6b7280;
+            --glass: rgba(255, 255, 255, .72);
+            --glass-strong: rgba(255, 255, 255, .88);
+            --border: rgba(255, 255, 255, .52);
+            --ring: rgba(236, 72, 153, .28);
+            --shadow-soft: 0 18px 60px rgba(190, 24, 93, .13);
+            --shadow-deep: 0 28px 90px rgba(131, 24, 67, .22);
+            --radius-xl: 28px;
         }
 
-        /* Animasi Promo Melayang */
+        * { box-sizing: border-box; }
+        html { scroll-behavior: smooth; }
+        body {
+            min-height: 100vh;
+            background:
+                radial-gradient(circle at 8% 12%, rgba(255, 184, 218, .75) 0 18%, transparent 34%),
+                radial-gradient(circle at 92% 6%, rgba(196, 181, 253, .62) 0 18%, transparent 36%),
+                radial-gradient(circle at 80% 80%, rgba(125, 211, 252, .42) 0 16%, transparent 34%),
+                linear-gradient(135deg, #fff7fb 0%, #fff1f7 38%, #f6f3ff 100%);
+            background-attachment: fixed;
+            color: var(--ink);
+            overflow-x: hidden;
+        }
+        body::before {
+            content: "";
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            background-image:
+                linear-gradient(rgba(255,255,255,.45) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(255,255,255,.45) 1px, transparent 1px);
+            background-size: 44px 44px;
+            mask-image: linear-gradient(to bottom, rgba(0,0,0,.55), transparent 78%);
+            z-index: -3;
+        }
+        .hide { display: none !important; }
+        .ambient-bg { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: -2; }
+        .ambient-bg span {
+            position: absolute; display: block; border-radius: 999px; filter: blur(4px);
+            opacity: .7; animation: orbFloat 12s ease-in-out infinite;
+        }
+        .ambient-bg span:nth-child(1) { width: 280px; height: 280px; left: -70px; top: 95px; background: rgba(244, 114, 182, .24); }
+        .ambient-bg span:nth-child(2) { width: 360px; height: 360px; right: -135px; top: 180px; background: rgba(167, 139, 250, .2); animation-delay: -4s; }
+        .ambient-bg span:nth-child(3) { width: 220px; height: 220px; left: 48%; bottom: -80px; background: rgba(45, 212, 191, .16); animation-delay: -7s; }
+
+        .glass-card {
+            position: relative;
+            background: linear-gradient(145deg, rgba(255,255,255,.90), rgba(255,255,255,.68));
+            backdrop-filter: blur(20px) saturate(150%);
+            -webkit-backdrop-filter: blur(20px) saturate(150%);
+            border: 1px solid rgba(255,255,255,.68);
+            box-shadow: var(--shadow-soft);
+            transition: transform .35s ease, box-shadow .35s ease, border-color .35s ease, background .35s ease;
+        }
+        .glass-card::before {
+            content: "";
+            position: absolute; inset: 0; border-radius: inherit; pointer-events: none;
+            background: linear-gradient(135deg, rgba(255,255,255,.74), transparent 35%, rgba(255,255,255,.28));
+            opacity: .65;
+        }
+        .glass-card > * { position: relative; z-index: 1; }
+        .glass-card:hover { transform: translateY(-4px); box-shadow: var(--shadow-deep); border-color: rgba(255, 196, 225, .85); }
+
+        nav {
+            background: rgba(255,255,255,.72) !important;
+            backdrop-filter: blur(22px) saturate(170%);
+            -webkit-backdrop-filter: blur(22px) saturate(170%);
+            border-bottom: 1px solid rgba(255,255,255,.7);
+            box-shadow: 0 16px 44px rgba(157, 23, 77, .08) !important;
+        }
+        nav img { box-shadow: 0 12px 30px rgba(236,72,153,.26); }
+        #nav-menu button,
+        #nav-menu a,
+        #nav-links-admin span {
+            border-radius: 999px;
+            transition: transform .25s ease, background .25s ease, color .25s ease, box-shadow .25s ease;
+        }
+        #nav-links-bunda button {
+            padding: .62rem .9rem;
+            background: rgba(255,255,255,.56);
+            border: 1px solid rgba(244,114,182,.18);
+            box-shadow: 0 8px 22px rgba(236,72,153,.06);
+            white-space: nowrap;
+        }
+        #nav-links-bunda button:hover {
+            transform: translateY(-2px);
+            color: var(--brand-700) !important;
+            background: linear-gradient(135deg, #fff, #fff1f7);
+            box-shadow: 0 12px 28px rgba(236,72,153,.14);
+        }
+
+        input, select, textarea {
+            background: rgba(255,255,255,.88) !important;
+            border: 1px solid rgba(244,114,182,.22) !important;
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 8px 28px rgba(157,23,77,.04);
+        }
+        input:focus, select:focus, textarea:focus {
+            outline: none !important;
+            border-color: rgba(236,72,153,.72) !important;
+            box-shadow: 0 0 0 5px var(--ring), 0 14px 36px rgba(236,72,153,.08) !important;
+        }
+        button, a { -webkit-tap-highlight-color: transparent; }
+        button[type="submit"],
+        #btn-toggle-contraction {
+            position: relative;
+            overflow: hidden;
+        }
+        button[type="submit"]::after,
+        #btn-toggle-contraction::after,
+        .premium-shine::after {
+            content: "";
+            position: absolute;
+            inset: -120% auto auto -55%;
+            width: 45%; height: 300%;
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.42), transparent);
+            transform: rotate(22deg);
+            animation: shine 3.8s ease-in-out infinite;
+            pointer-events: none;
+        }
+        button[type="submit"]:disabled { opacity: .72; cursor: wait; }
+
+        .view-enter { animation: viewEnter .55s cubic-bezier(.16, 1, .3, 1) both; }
+        .animate-fade-in { animation: viewEnter .55s cubic-bezier(.16, 1, .3, 1) both; }
+        .animate-pop { animation: pop .58s cubic-bezier(.2, 1.25, .3, 1) both; }
+        .animate-slow-spin { animation: slowSpin 16s linear infinite; }
+        .animate-soft-pulse { animation: softPulse 2.4s ease-in-out infinite; }
+        .floating-chip { animation: float 4.3s ease-in-out infinite; }
+        .floating-chip:nth-child(2) { animation-delay: -1.4s; }
+        .floating-chip:nth-child(3) { animation-delay: -2.6s; }
+
+        .login-shell {
+            position: relative;
+            display: grid;
+            grid-template-columns: minmax(0, 1fr);
+            gap: 1.2rem;
+        }
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: .5rem;
+            padding: .48rem .75rem;
+            border-radius: 999px;
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(244,114,182,.22);
+            box-shadow: 0 14px 34px rgba(236,72,153,.1);
+            font-size: .72rem; font-weight: 900; letter-spacing: .08em; text-transform: uppercase; color: var(--brand-700);
+        }
+        .brand-gradient-text {
+            background: linear-gradient(90deg, #be185d, #ec4899, #7c3aed);
+            -webkit-background-clip: text; background-clip: text; color: transparent;
+        }
+        .hero-orb {
+            position: absolute; border-radius: 999px; opacity: .9; filter: blur(.2px);
+            background: linear-gradient(135deg, rgba(255,255,255,.96), rgba(255,228,240,.82));
+            border: 1px solid rgba(255,255,255,.78);
+            box-shadow: 0 18px 55px rgba(236,72,153,.16);
+        }
+        .promo-card {
+            background:
+                radial-gradient(circle at 15% 15%, rgba(255,255,255,.96), transparent 28%),
+                linear-gradient(145deg, rgba(255,255,255,.88), rgba(255,228,240,.76) 46%, rgba(237,233,254,.76));
+            border: 1px solid rgba(255,255,255,.72);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.75), 0 24px 70px rgba(236,72,153,.16);
+        }
+        .price-card {
+            background: rgba(255,255,255,.78);
+            border: 1px solid rgba(255,255,255,.8);
+            box-shadow: 0 18px 45px rgba(157,23,77,.08);
+        }
+
+        #view-dashboard .grid > .glass-card,
+        #view-dashboard .space-y-6 > .glass-card,
+        #view-dashboard .lg\:col-span-3 > .glass-card,
+        #view-imt .glass-card,
+        #view-kontraksi .glass-card,
+        #view-profile .glass-card,
+        #view-admin .glass-card,
+        #view-setup .glass-card {
+            animation: cardRise .58s cubic-bezier(.16, 1, .3, 1) both;
+        }
+        #view-dashboard .glass-card:nth-child(2n) { animation-delay: .04s; }
+        #view-dashboard .glass-card:nth-child(3n) { animation-delay: .08s; }
+
+        #view-dashboard h2,
+        #view-admin h2,
+        #view-imt h2,
+        #view-kontraksi h2,
+        #view-profile h2 { letter-spacing: -.035em; }
+
+        #dash-usia,
+        #dash-hpl,
+        #contraction-timer,
+        #imt-score { letter-spacing: -.04em; }
+
+        #fetal-carousel-img { filter: drop-shadow(0 18px 32px rgba(157,23,77,.12)); }
+        #info-makanan > div,
+        #info-keluhan > div,
+        #info-bahaya > div,
+        #info-vitamin li,
+        #info-pantangan li,
+        #info-persiapan > div,
+        #imt-result-container .bg-white,
+        #contraction-insight {
+            transition: transform .3s ease, box-shadow .3s ease, border-color .3s ease;
+        }
+        #info-makanan > div:hover,
+        #info-keluhan > div:hover,
+        #info-bahaya > div:hover,
+        #info-persiapan > div:hover { transform: translateY(-3px); box-shadow: 0 18px 45px rgba(157,23,77,.1); }
+
+        table { border-collapse: separate; border-spacing: 0; }
+        tbody tr { transition: background .25s ease, transform .25s ease; }
+        tbody tr:hover { background: rgba(255,241,247,.72) !important; }
+
+        footer {
+            background: rgba(255,255,255,.66) !important;
+            backdrop-filter: blur(18px);
+            border-color: rgba(255,255,255,.74) !important;
+        }
+
+        ::selection { background: rgba(236,72,153,.22); color: #831843; }
+        ::-webkit-scrollbar { width: 9px; height: 9px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: linear-gradient(#f9a8d4, #c4b5fd); border-radius: 999px; border: 2px solid rgba(255,255,255,.65); }
+        ::-webkit-scrollbar-thumb:hover { background: linear-gradient(#ec4899, #8b5cf6); }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); filter: saturate(1); }
+            14% { transform: scale(1.06); filter: saturate(1.22); }
+            28% { transform: scale(1); }
+            42% { transform: scale(1.04); }
+        }
+        .animate-heartbeat { animation: heartbeat 1.15s infinite; }
         @keyframes float {
-            0% { transform: translateY(0px) rotate(0deg); }
-            50% { transform: translateY(-8px) rotate(5deg); }
-            100% { transform: translateY(0px) rotate(0deg); }
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-12px) rotate(4deg); }
         }
-        .animate-float {
-            animation: float 3s ease-in-out infinite;
+        .animate-float { animation: float 3s ease-in-out infinite; }
+        .animate-float-delayed { animation: float 3s ease-in-out infinite; animation-delay: 1.5s; }
+        @keyframes orbFloat {
+            0%, 100% { transform: translate3d(0,0,0) scale(1); }
+            50% { transform: translate3d(24px,-28px,0) scale(1.06); }
         }
-        .animate-float-delayed {
-            animation: float 3s ease-in-out infinite;
-            animation-delay: 1.5s;
+        @keyframes shine {
+            0%, 48% { transform: translateX(0) rotate(22deg); opacity: 0; }
+            58% { opacity: 1; }
+            100% { transform: translateX(420%) rotate(22deg); opacity: 0; }
+        }
+        @keyframes viewEnter {
+            from { opacity: 0; transform: translateY(18px) scale(.985); filter: blur(6px); }
+            to { opacity: 1; transform: translateY(0) scale(1); filter: blur(0); }
+        }
+        @keyframes cardRise {
+            from { opacity: 0; transform: translateY(22px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes pop {
+            0% { opacity: 0; transform: translateY(18px) scale(.92); }
+            100% { opacity: 1; transform: translateY(0) scale(1); }
+        }
+        @keyframes slowSpin { to { transform: rotate(360deg); } }
+        @keyframes softPulse {
+            0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(236,72,153,.24); }
+            50% { transform: scale(1.03); box-shadow: 0 0 0 14px rgba(236,72,153,0); }
+        }
+
+        @media (min-width: 1024px) {
+            .login-shell { grid-template-columns: .95fr 1.05fr; align-items: stretch; }
+            .login-hero-card { min-height: 635px; }
+        }
+        @media (max-width: 900px) {
+            nav .h-20 { height: auto !important; min-height: 4.75rem; padding-block: .75rem; gap: .75rem; align-items: flex-start; }
+            #nav-menu { width: 100%; overflow-x: auto; padding-bottom: .25rem; gap: .55rem !important; }
+            #nav-links-bunda { gap: .5rem !important; overflow-x: auto; padding-bottom: .1rem; }
+            #nav-links-bunda button { font-size: .78rem; padding: .55rem .72rem; }
+        }
+        @media (max-width: 640px) {
+            main { padding-left: 1rem !important; padding-right: 1rem !important; }
+            .glass-card { border-radius: 22px !important; }
+            .login-hero-card { padding: 1.25rem !important; }
+            .hero-badge { font-size: .64rem; }
+            #view-login h1 { font-size: 2.05rem !important; }
+            #contraction-timer { font-size: 3.7rem !important; }
+            .fixed.bottom-6.right-6 { right: 1rem !important; bottom: 1rem !important; }
+        }
+        @media (prefers-reduced-motion: reduce) {
+            *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
         }
     </style>
 </head>
-<body class="text-gray-800 antialiased min-h-screen flex flex-col">
+<body class="text-gray-800 antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-brand-200/70 selection:text-brand-900">
+
+    <div class="ambient-bg" aria-hidden="true"><span></span><span></span><span></span></div>
 
     <!-- Navbar -->
-    <nav class="bg-white shadow-sm sticky top-0 z-50">
-        <div class="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <div class="flex items-center">
-                    <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjUPxpcmdYwroQ1qcG_iYFe6HuR9MJkAiP3gejk0V04HItZs87MJgD-l-XHKiZSOC0hFuOVd4zD4sJL1zyCEU9cvnJTlMp87vy4Bq00a0ALGU8Ikh7uyTPMbiQpp5QHbOfEaS-mKlPoHCQFJMUTCJnCw7vBQqbkvtwpxauDZFDB10pPB8KhO0NFdGiZ_nqr/s1189/WhatsApp%20Image%202026-05-11%20at%2022.38.48.jpeg" alt="Logo Rumah Bidan" class="h-9 w-9 mr-2 rounded-full object-cover border border-brand-200 shadow-sm">
-                    <span class="font-bold text-xl text-brand-600">Rumah Bidan</span>
+    <nav class="sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <div class="flex flex-wrap justify-between items-center min-h-20 gap-3 py-3">
+                <div class="flex items-center group">
+                    <div class="relative mr-3">
+                        <div class="absolute inset-0 rounded-full bg-brand-400/35 blur-lg group-hover:bg-brand-500/40 transition"></div>
+                        <img src="https://blogger.googleusercontent.com/img/b/R29vZ2xl/AVvXsEjUPxpcmdYwroQ1qcG_iYFe6HuR9MJkAiP3gejk0V04HItZs87MJgD-l-XHKiZSOC0hFuOVd4zD4sJL1zyCEU9cvnJTlMp87vy4Bq00a0ALGU8Ikh7uyTPMbiQpp5QHbOfEaS-mKlPoHCQFJMUTCJnCw7vBQqbkvtwpxauDZFDB10pPB8KhO0NFdGiZ_nqr/s1189/WhatsApp%20Image%202026-05-11%20at%2022.38.48.jpeg" alt="Logo Rumah Bidan" class="relative h-11 w-11 rounded-2xl object-cover border-2 border-white shadow-sm transition duration-300 group-hover:rotate-3 group-hover:scale-105">
+                    </div>
+                    <div>
+                        <span class="block font-black text-xl sm:text-2xl tracking-tight brand-gradient-text">Rumah Bidan</span>
+                        <span class="hidden sm:block text-[10px] uppercase tracking-[0.28em] font-black text-brand-500/75">Pregnancy Care</span>
+                    </div>
                 </div>
-                <div class="flex items-center space-x-4 hide" id="nav-menu">
+                <div class="flex items-center gap-2 sm:gap-3 hide" id="nav-menu">
                     <!-- Navigasi khusus Bunda -->
-                    <div id="nav-links-bunda" class="space-x-4 flex items-center">
-                        <button onclick="showView('dashboard')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Beranda</button>
-                        <button onclick="showView('imt')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Kalkulator IMT</button>
-                        <button onclick="showView('kontraksi')" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base relative">
+                    <div id="nav-links-bunda" class="flex items-center gap-2">
+                        <button onclick="showView('dashboard')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Beranda</button>
+                        <button onclick="showView('imt')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Kalkulator IMT</button>
+                        <button onclick="showView('kontraksi')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base relative">
                             Kontraksi
-                            <span class="absolute -top-1 -right-2 flex h-3 w-3">
+                            <span class="absolute -top-1 -right-1 flex h-3 w-3">
                               <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
                               <span class="relative inline-flex rounded-full h-3 w-3 bg-brand-500"></span>
                             </span>
                         </button>
-                        <button onclick="showProfile()" class="text-gray-600 hover:text-brand-600 font-semibold text-sm sm:text-base">Profil</button>
+                        <button onclick="showProfile()" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Profil</button>
                     </div>
                     <!-- Indikator khusus Admin -->
                     <div id="nav-links-admin" class="flex items-center hide">
-                        <span class="bg-brand-100 text-brand-700 px-3 py-1 rounded-full text-xs font-bold uppercase tracking-wider">Mode Admin</span>
+                        <span class="bg-white/70 text-brand-700 px-4 py-2 rounded-full text-xs font-black uppercase tracking-wider border border-brand-200 shadow-sm">Mode Admin</span>
                     </div>
-                    <button onclick="logout()" class="bg-red-50 text-red-600 px-3 py-1.5 rounded-md text-sm font-bold hover:bg-red-100 transition">Keluar</button>
+                    <button onclick="logout()" class="bg-red-50/90 text-red-600 px-4 py-2 rounded-full text-sm font-black hover:bg-red-100 transition shadow-sm border border-red-100">Keluar</button>
                 </div>
             </div>
         </div>
     </nav>
 
     <!-- Main Content Area -->
-    <main class="flex-grow flex flex-col items-center p-4 sm:p-8 w-full max-w-5xl mx-auto relative">
+    <main class="flex-grow flex flex-col items-center p-4 sm:p-8 w-full max-w-7xl mx-auto relative">
 
         <!-- VIEW: LOGIN -->
-        <div id="view-login" class="w-full max-w-md mt-6 sm:mt-10 mb-10">
-            <div class="glass-card rounded-2xl p-6 sm:p-8 text-center relative">
-                
-                <div class="w-16 h-16 bg-brand-100 text-brand-500 rounded-full flex items-center justify-center mx-auto mb-4">
-                    <svg class="w-8 h-8" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
-                </div>
-                <h2 class="text-2xl font-bold text-gray-800 mb-2">Selamat Datang</h2>
-                <p class="text-gray-500 text-sm mb-6">Masukkan kode unik yang diberikan oleh Bidan untuk memantau kehamilan Anda.</p>
-                
-                <!-- Form Login -->
-                <form id="login-form" onsubmit="handleLogin(event)" class="mb-8">
-                    <input type="text" id="login-code" placeholder="Contoh: BUNDA123" class="w-full px-4 py-3 rounded-xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition mb-4 text-center text-lg font-bold uppercase tracking-wider" required>
-                    <p id="login-error" class="text-red-500 text-sm mb-4 hide">Kode tidak ditemukan. Silakan cek kembali.</p>
-                    <button type="submit" class="w-full bg-brand-500 hover:bg-brand-600 text-white font-bold py-3 px-4 rounded-xl shadow-lg shadow-brand-500/30 transition duration-200 transform hover:-translate-y-1">
-                        Masuk
-                    </button>
-                </form>
+        <div id="view-login" class="w-full mt-4 sm:mt-8 mb-10 view-enter">
+            <div class="login-shell">
+                <section class="login-hero-card glass-card rounded-[2.25rem] p-6 sm:p-8 lg:p-10 overflow-hidden flex flex-col justify-between">
+                    <div class="hero-orb w-24 h-24 top-8 right-10 animate-slow-spin"></div>
+                    <div class="hero-orb w-14 h-14 bottom-24 left-10 floating-chip"></div>
+                    <div class="absolute -right-20 -bottom-24 w-72 h-72 rounded-full bg-brand-300/20 blur-3xl"></div>
+                    <div class="absolute -left-16 top-24 w-52 h-52 rounded-full bg-purple-300/20 blur-3xl"></div>
 
-                <!-- Promo Banner Spesial -->
-                <div class="mt-8 border-t border-brand-100 pt-8 relative">
-                    <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white px-4 py-1 text-[10px] font-extrabold text-brand-500 rounded-full border border-brand-100 uppercase tracking-widest shadow-sm">
-                        Belum Punya Akses?
+                    <div>
+                        <span class="hero-badge mb-5"><span class="text-lg">✦</span> Monitoring Kehamilan Premium</span>
+                        <h1 class="font-display text-4xl sm:text-5xl lg:text-6xl leading-[1.04] font-extrabold tracking-tight text-gray-900 mb-5">
+                            Pantau kehamilan Bunda dengan tampilan yang lebih <span class="brand-gradient-text">hangat & modern.</span>
+                        </h1>
+                        <p class="text-gray-600 text-sm sm:text-base leading-relaxed max-w-xl mb-7">
+                            Masuk menggunakan kode unik dari Bidan untuk melihat usia kehamilan, HPL, perkembangan janin, rekomendasi nutrisi, kalkulator IMT, dan penghitung kontraksi.
+                        </p>
+                        <div class="grid grid-cols-3 gap-3 max-w-xl">
+                            <div class="price-card rounded-2xl p-3 text-center animate-pop">
+                                <div class="text-2xl mb-1">👶</div>
+                                <p class="text-[10px] uppercase tracking-wide text-gray-400 font-black">Janin</p>
+                                <p class="text-xs font-extrabold text-gray-700">Mingguan</p>
+                            </div>
+                            <div class="price-card rounded-2xl p-3 text-center animate-pop" style="animation-delay:.08s">
+                                <div class="text-2xl mb-1">⏱️</div>
+                                <p class="text-[10px] uppercase tracking-wide text-gray-400 font-black">HPL</p>
+                                <p class="text-xs font-extrabold text-gray-700">Real-time</p>
+                            </div>
+                            <div class="price-card rounded-2xl p-3 text-center animate-pop" style="animation-delay:.16s">
+                                <div class="text-2xl mb-1">💗</div>
+                                <p class="text-[10px] uppercase tracking-wide text-gray-400 font-black">Bidan</p>
+                                <p class="text-xs font-extrabold text-gray-700">Terhubung</p>
+                            </div>
+                        </div>
                     </div>
+
+                    <div class="mt-10 rounded-[2rem] bg-white/55 border border-white/70 p-4 sm:p-5 shadow-inner">
+                        <p class="text-xs sm:text-sm text-gray-600 leading-relaxed">
+                            <span class="font-black text-brand-700">Catatan:</span> informasi di aplikasi ini membantu pemantauan mandiri, namun keputusan medis tetap mengikuti arahan bidan atau dokter kandungan.
+                        </p>
+                    </div>
+                </section>
+
+                <section class="glass-card rounded-[2.25rem] p-5 sm:p-7 lg:p-8 text-center overflow-hidden">
+                    <div class="absolute -top-24 left-1/2 -translate-x-1/2 w-80 h-80 rounded-full bg-brand-200/30 blur-3xl"></div>
+                    <div class="w-20 h-20 bg-gradient-to-br from-brand-100 to-purple-100 text-brand-500 rounded-[1.7rem] flex items-center justify-center mx-auto mb-5 shadow-xl shadow-brand-500/15 animate-soft-pulse border border-white/80">
+                        <svg class="w-9 h-9" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 11c0 3.517-1.009 6.799-2.753 9.571m-3.44-2.04l.054-.09A13.916 13.916 0 008 11a4 4 0 118 0c0 1.017-.07 2.019-.203 3m-2.118 6.844A21.88 21.88 0 0015.171 17m3.839 1.132c.645-2.266.99-4.659.99-7.132A8 8 0 008 4.07M3 15.364c.64-1.319 1-2.8 1-4.364 0-1.457.39-2.823 1.07-4"></path></svg>
+                    </div>
+                    <h2 class="text-2xl sm:text-3xl font-black text-gray-900 mb-2 tracking-tight">Selamat Datang, Bunda</h2>
+                    <p class="text-gray-500 text-sm mb-6 leading-relaxed">Masukkan kode unik untuk membuka dashboard kehamilan pribadi Bunda.</p>
                     
-                    <div class="bg-gradient-to-br from-brand-50 via-white to-pink-50 rounded-2xl p-5 border border-brand-200 shadow-inner relative overflow-hidden">
-                        <!-- Ornamen Animasi Lucu -->
-                        <div class="absolute -top-2 -right-1 text-3xl animate-float opacity-70">✨</div>
-                        <div class="absolute bottom-1 -left-2 text-4xl animate-float-delayed opacity-60">👶</div>
-                        <div class="absolute top-1/2 left-2 text-2xl animate-pulse opacity-50">💖</div>
-                        <div class="absolute top-4 left-4 text-xl animate-float opacity-40">🎀</div>
-
-                        <span class="bg-red-500 text-white text-[10px] font-black uppercase tracking-wider py-1 px-3 rounded-full animate-pulse inline-block mb-3 shadow-md">
-                            Promo Spesial Bulan Ini! 🎉
-                        </span>
-                        
-                        <h3 class="font-black text-gray-800 text-lg mb-1 leading-tight">Akses Premium<br><span class="text-brand-600">Rumah Bidan</span></h3>
-                        <p class="text-xs text-gray-500 mb-4 px-2">Dapatkan info lengkap perkembangan janin, tips nutrisi, kalkulator kehamilan & HPL otomatis.</p>
-
-                        <div class="flex justify-center items-center space-x-3 mb-5 bg-white py-2 rounded-xl mx-2 shadow-sm border border-brand-50">
-                            <div class="text-right">
-                                <span class="block text-[10px] text-gray-400 uppercase font-bold">Harga Normal</span>
-                                <span class="text-sm text-gray-400 line-through font-bold">Rp 50.000</span>
-                            </div>
-                            <div class="w-px h-8 bg-gray-200"></div>
-                            <div class="text-left">
-                                <span class="block text-[10px] text-brand-500 uppercase font-bold animate-pulse">Diskon 50%</span>
-                                <span class="text-2xl font-black text-brand-600">Rp 25.000</span>
-                            </div>
+                    <!-- Form Login -->
+                    <form id="login-form" onsubmit="handleLogin(event)" class="mb-7">
+                        <div class="relative mb-4">
+                            <input type="text" id="login-code" placeholder="Contoh: BUNDA123" class="w-full px-5 py-4 rounded-2xl border border-gray-300 focus:ring-2 focus:ring-brand-400 focus:border-brand-400 transition text-center text-lg font-black uppercase tracking-[0.22em]" required>
+                            <div class="absolute inset-y-0 right-4 flex items-center text-brand-300 pointer-events-none">✦</div>
                         </div>
+                        <p id="login-error" class="text-red-500 text-sm mb-4 hide font-bold">Kode tidak ditemukan. Silakan cek kembali.</p>
+                        <button type="submit" class="premium-shine w-full bg-gradient-to-r from-brand-500 via-pink-500 to-purple-500 hover:from-brand-600 hover:to-purple-600 text-white font-black py-4 px-4 rounded-2xl shadow-xl shadow-brand-500/30 transition duration-300 transform hover:-translate-y-1 active:scale-[.98]">
+                            Masuk ke Dashboard
+                        </button>
+                    </form>
 
-                        <p class="text-[11px] font-bold text-gray-400 mb-3 uppercase tracking-wide">Pesan Akses Sekarang Via:</p>
+                    <!-- Promo Banner Spesial -->
+                    <div class="mt-7 pt-7 relative">
+                        <div class="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-brand-200 to-transparent"></div>
+                        <div class="absolute -top-3 left-1/2 transform -translate-x-1/2 bg-white/90 px-4 py-1 text-[10px] font-black text-brand-600 rounded-full border border-brand-100 uppercase tracking-widest shadow-sm">
+                            Belum Punya Akses?
+                        </div>
                         
-                        <div class="flex flex-col space-y-3 relative z-10">
-                            <!-- Tombol WhatsApp -->
-                            <a href="https://wa.me/6285805579880?text=Halo%20Bidan,%20saya%20ingin%20membeli%20akses%20premium%20Rumah%20Bidan%20seharga%20promo%2025rb." target="_blank" class="flex items-center justify-center bg-[#25D366] hover:bg-[#1ebd5c] text-white py-2.5 rounded-xl text-sm font-bold transition duration-300 transform hover:scale-105 shadow-lg shadow-green-500/30">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6.009L.445 24l6.104-1.6c1.758.956 3.743 1.46 5.482 1.46 6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.848c-1.802 0-3.568-.484-5.118-1.403l-.367-.218-3.8.997.997-3.8-.218-.367c-.919-1.55-1.403-3.316-1.403-5.118 0-5.541 4.509-10.05 10.05-10.05 5.541 0 10.05 4.509 10.05 10.05 0 5.541-4.509 10.05-10.05 10.05zm5.513-7.533c-.302-.151-1.785-.881-2.062-.982-.277-.101-.478-.151-.68.151-.201.302-.78 1.006-.957 1.208-.176.201-.352.226-.654.075-1.524-.766-2.613-1.444-3.626-2.909-.258-.372-.03-.564.12-.714.135-.136.302-.352.453-.529.151-.176.201-.302.302-.503.101-.201.05-.377-.025-.528-.075-.151-.68-1.636-.931-2.24-.246-.593-.497-.513-.68-.523-.176-.008-.377-.01-.579-.01-.201 0-.528.075-.805.377-.277.302-1.056 1.032-1.056 2.516s1.082 2.918 1.233 3.12c.151.201 2.128 3.25 5.152 4.553.719.309 1.28.494 1.717.633.722.23 1.38.197 1.897.12.576-.086 1.785-.729 2.036-1.434.251-.705.251-1.308.176-1.434-.076-.126-.277-.202-.579-.353z" /></svg>
-                                Beli via WhatsApp
-                            </a>
-                            <!-- Tombol TikTok -->
-                            <a href="https://www.tiktok.com/@bidan.de_12" target="_blank" class="flex items-center justify-center bg-gray-900 hover:bg-black text-white py-2.5 rounded-xl text-sm font-bold transition duration-300 transform hover:scale-105 shadow-lg shadow-gray-900/30">
-                                <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.8-5.46-.4-2.52.44-5.22 2.21-7.07 1.15-1.22 2.75-2.02 4.41-2.29.13-.02.26-.04.4-.04v4.03c-1.14-.04-2.31.25-3.23.94-1.05.77-1.74 2.06-1.77 3.39-.02 1.29.62 2.57 1.64 3.34 1.22.9 2.9.96 4.2.22 1.3-.73 2.1-2.15 2.13-3.64.04-3.58.01-7.16.03-10.74z" /></svg>
-                                Kunjungi TikTok Kami
-                            </a>
+                        <div class="promo-card rounded-[2rem] p-5 sm:p-6 relative overflow-hidden">
+                            <div class="absolute -top-4 -right-2 text-4xl animate-float opacity-80">✨</div>
+                            <div class="absolute bottom-1 -left-2 text-5xl animate-float-delayed opacity-60">👶</div>
+                            <div class="absolute top-1/2 left-3 text-2xl animate-pulse opacity-50">💖</div>
+                            <div class="absolute top-5 left-5 text-xl animate-float opacity-40">🎀</div>
+
+                            <span class="bg-gradient-to-r from-red-500 to-pink-500 text-white text-[10px] font-black uppercase tracking-wider py-1.5 px-3 rounded-full animate-pulse inline-block mb-3 shadow-md">
+                                Promo Spesial Bulan Ini! 🎉
+                            </span>
+                            
+                            <h3 class="font-black text-gray-900 text-xl mb-1 leading-tight">Akses Premium<br><span class="brand-gradient-text">Rumah Bidan</span></h3>
+                            <p class="text-xs text-gray-500 mb-4 px-2 leading-relaxed">Info perkembangan janin, nutrisi, kalkulator kehamilan, HPL otomatis, dan fitur pendamping Bunda.</p>
+
+                            <div class="flex justify-center items-center gap-3 mb-5 price-card py-3 rounded-2xl mx-0 sm:mx-2">
+                                <div class="text-right">
+                                    <span class="block text-[10px] text-gray-400 uppercase font-black">Harga Normal</span>
+                                    <span class="text-sm text-gray-400 line-through font-bold">Rp 50.000</span>
+                                </div>
+                                <div class="w-px h-10 bg-gray-200"></div>
+                                <div class="text-left">
+                                    <span class="block text-[10px] text-brand-500 uppercase font-black animate-pulse">Diskon 50%</span>
+                                    <span class="text-2xl sm:text-3xl font-black brand-gradient-text">Rp 25.000</span>
+                                </div>
+                            </div>
+
+                            <p class="text-[11px] font-black text-gray-400 mb-3 uppercase tracking-wide">Pesan Akses Sekarang Via:</p>
+                            
+                            <div class="flex flex-col space-y-3 relative z-10">
+                                <!-- Tombol WhatsApp -->
+                                <a href="https://wa.me/6285805579880?text=Halo%20Bidan,%20saya%20ingin%20membeli%20akses%20premium%20Rumah%20Bidan%20seharga%20promo%2025rb." target="_blank" class="flex items-center justify-center bg-[#25D366] hover:bg-[#1ebd5c] text-white py-3 rounded-2xl text-sm font-black transition duration-300 transform hover:scale-[1.03] shadow-lg shadow-green-500/30">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6.009L.445 24l6.104-1.6c1.758.956 3.743 1.46 5.482 1.46 6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.848c-1.802 0-3.568-.484-5.118-1.403l-.367-.218-3.8.997.997-3.8-.218-.367c-.919-1.55-1.403-3.316-1.403-5.118 0-5.541 4.509-10.05 10.05-10.05 5.541 0 10.05 4.509 10.05 10.05 0 5.541-4.509 10.05-10.05 10.05zm5.513-7.533c-.302-.151-1.785-.881-2.062-.982-.277-.101-.478-.151-.68.151-.201.302-.78 1.006-.957 1.208-.176.201-.352.226-.654.075-1.524-.766-2.613-1.444-3.626-2.909-.258-.372-.03-.564.12-.714.135-.136.302-.352.453-.529.151-.176.201-.302.302-.503.101-.201.05-.377-.025-.528-.075-.151-.68-1.636-.931-2.24-.246-.593-.497-.513-.68-.523-.176-.008-.377-.01-.579-.01-.201 0-.528.075-.805.377-.277.302-1.056 1.032-1.056 2.516s1.082 2.918 1.233 3.12c.151.201 2.128 3.25 5.152 4.553.719.309 1.28.494 1.717.633.722.23 1.38.197 1.897.12.576-.086 1.785-.729 2.036-1.434.251-.705.251-1.308.176-1.434-.076-.126-.277-.202-.579-.353z" /></svg>
+                                    Beli via WhatsApp
+                                </a>
+                                <!-- Tombol TikTok -->
+                                <a href="https://www.tiktok.com/@bidan.de_12" target="_blank" class="flex items-center justify-center bg-gray-950 hover:bg-black text-white py-3 rounded-2xl text-sm font-black transition duration-300 transform hover:scale-[1.03] shadow-lg shadow-gray-900/30">
+                                    <svg class="w-5 h-5 mr-2" fill="currentColor" viewBox="0 0 24 24"><path d="M12.525.02c1.31-.02 2.61-.01 3.91.02.08 1.53.63 3.09 1.75 4.17 1.12 1.11 2.7 1.62 4.24 1.79v4.03c-1.44-.05-2.89-.35-4.2-.97-.57-.26-1.1-.59-1.62-.93-.01 2.92.01 5.84-.02 8.75-.08 1.4-.54 2.79-1.35 3.94-1.31 1.92-3.58 3.17-5.91 3.21-1.43.08-2.86-.31-4.08-1.03-2.02-1.12-3.44-3.17-3.8-5.46-.4-2.52.44-5.22 2.21-7.07 1.15-1.22 2.75-2.02 4.41-2.29.13-.02.26-.04.4-.04v4.03c-1.14-.04-2.31.25-3.23.94-1.05.77-1.74 2.06-1.77 3.39-.02 1.29.62 2.57 1.64 3.34 1.22.9 2.9.96 4.2.22 1.3-.73 2.1-2.15 2.13-3.64.04-3.58.01-7.16.03-10.74z" /></svg>
+                                    Kunjungi TikTok Kami
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </div>
-
+                </section>
             </div>
         </div>
 
@@ -247,7 +561,7 @@
 
         <!-- VIEW: SETUP HPHT -->
         <div id="view-setup" class="w-full max-w-md mt-10 hide">
-            <div class="glass-card rounded-2xl p-8 text-center">
+            <div class="glass-card rounded-[2rem] p-8 text-center overflow-hidden">
                 <h2 class="text-2xl font-bold text-gray-800 mb-2">Langkah Awal</h2>
                 <p class="text-gray-500 text-sm mb-6">Untuk memberikan informasi yang akurat, mohon masukkan Hari Pertama Haid Terakhir (HPHT) Anda.</p>
                 
@@ -270,18 +584,18 @@
         <!-- VIEW: DASHBOARD (UNTUK BUNDA) -->
         <div id="view-dashboard" class="w-full hide animate-fade-in">
             <!-- Greeting -->
-            <div class="mb-6 flex justify-between items-end">
+            <div class="mb-8 flex justify-between items-end">
                 <div>
-                    <h2 class="text-2xl font-bold text-gray-800" id="dash-welcome">Halo, Bunda!</h2>
-                    <p class="text-gray-500 text-sm">Pantau terus perkembangan buah hati Anda.</p>
+                    <h2 class="text-3xl sm:text-4xl font-black text-gray-900" id="dash-welcome">Halo, Bunda!</h2>
+                    <p class="text-gray-500 text-sm sm:text-base">Pantau perkembangan buah hati dengan dashboard yang lebih hidup dan mudah dibaca.</p>
                 </div>
             </div>
 
             <!-- Header Stats -->
             <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
                 <!-- Usia Kehamilan -->
-                <div class="glass-card rounded-2xl p-6 flex items-center bg-gradient-to-br from-brand-500 to-brand-600 text-white shadow-xl shadow-brand-500/20">
-                    <div class="w-16 h-16 bg-white/20 rounded-full flex items-center justify-center mr-6 backdrop-blur-sm">
+                <div class="glass-card rounded-[2rem] p-6 sm:p-7 flex items-center bg-gradient-to-br from-brand-500 via-pink-500 to-purple-500 text-white shadow-xl shadow-brand-500/20 overflow-hidden">
+                    <div class="w-16 h-16 bg-white/20 rounded-[1.4rem] flex items-center justify-center mr-6 backdrop-blur-sm shadow-inner animate-soft-pulse">
                         <svg class="w-8 h-8 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                     </div>
                     <div>
@@ -292,7 +606,7 @@
                 </div>
 
                 <!-- HPL -->
-                <div class="glass-card rounded-2xl p-6 relative overflow-hidden">
+                <div class="glass-card rounded-[2rem] p-6 sm:p-7 relative overflow-hidden">
                     <div class="flex justify-between items-start mb-4">
                         <div>
                             <p class="text-gray-500 font-semibold mb-1">Hari Perkiraan Lahir (HPL)</p>
@@ -329,7 +643,7 @@
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Kolom Kiri: Perkembangan & Medis -->
                 <div class="lg:col-span-1 space-y-6">
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-brand-400">
+                    <div class="glass-card rounded-[2rem] p-6 border-t-4 border-brand-400 overflow-hidden">
                         <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-brand-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9"></path></svg>
                             Perkembangan Janin
@@ -364,7 +678,7 @@
                     </div>
                     
                     <!-- Jadwal Medis (USG, TT, Lab) -->
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-500 space-y-5">
+                    <div class="glass-card rounded-[2rem] p-6 border-t-4 border-blue-500 space-y-5 overflow-hidden">
                         <h4 class="text-lg font-bold text-gray-800 mb-2 flex items-center">
                             <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"></path></svg>
                             Jadwal Medis & Cek Lab
@@ -391,7 +705,7 @@
                 <div class="lg:col-span-2 space-y-6">
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Makanan -->
-                        <div class="glass-card rounded-2xl p-6 border-t-4 border-green-400">
+                        <div class="glass-card rounded-[2rem] p-6 border-t-4 border-green-400 overflow-hidden">
                             <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-green-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
                                 Rekomendasi Makanan
@@ -403,7 +717,7 @@
 
                         <!-- Vitamin & Olahraga -->
                         <div class="space-y-6">
-                            <div class="glass-card rounded-2xl p-6 border-t-4 border-blue-400">
+                            <div class="glass-card rounded-[2rem] p-6 border-t-4 border-blue-400 overflow-hidden">
                                 <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                                     <svg class="w-5 h-5 mr-2 text-blue-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path></svg>
                                     Vitamin Dianjurkan
@@ -413,7 +727,7 @@
                                 </ul>
                             </div>
 
-                            <div class="glass-card rounded-2xl p-6 border-t-4 border-teal-500">
+                            <div class="glass-card rounded-[2rem] p-6 border-t-4 border-teal-500 overflow-hidden">
                                 <h4 class="text-lg font-bold text-gray-800 mb-3 flex items-center">
                                     <svg class="w-5 h-5 mr-2 text-teal-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path></svg>
                                     Olahraga Aman
@@ -425,7 +739,7 @@
 
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                         <!-- Keluhan & Pantangan -->
-                        <div class="glass-card rounded-2xl p-6 border-t-4 border-purple-400">
+                        <div class="glass-card rounded-[2rem] p-6 border-t-4 border-purple-400 overflow-hidden">
                             <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-purple-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4.318 6.318a4.5 4.5 0 000 6.364L12 20.364l7.682-7.682a4.5 4.5 0 00-6.364-6.364L12 7.636l-1.318-1.318a4.5 4.5 0 00-6.364 0z"></path></svg>
                                 Keluhan & Solusi
@@ -442,7 +756,7 @@
                         </div>
 
                         <!-- Mitos vs Fakta -->
-                        <div class="glass-card rounded-2xl p-6 border-t-4 border-yellow-400">
+                        <div class="glass-card rounded-[2rem] p-6 border-t-4 border-yellow-400 overflow-hidden">
                             <h4 class="text-lg font-bold text-gray-800 mb-4 flex items-center">
                                 <svg class="w-5 h-5 mr-2 text-yellow-500" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z"></path></svg>
                                 Mitos vs Fakta
@@ -457,7 +771,7 @@
                 <!-- Kolom Penuh: Tanda Bahaya & Persiapan -->
                 <div class="lg:col-span-3 space-y-6 mt-4">
                     <!-- Tanda Bahaya Kehamilan (Ilustrasi AI Visual) -->
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-red-500 overflow-hidden relative">
+                    <div class="glass-card rounded-[2rem] p-6 sm:p-7 border-t-4 border-red-500 overflow-hidden relative">
                         <div class="absolute top-0 right-0 p-4 opacity-10">
                             <svg class="w-32 h-32 text-red-500" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2L1 21h22L12 2zm1 16h-2v-2h2v2zm0-4h-2v-5h2v5z"></path></svg>
                         </div>
@@ -472,7 +786,7 @@
                     </div>
 
                     <!-- Persiapan Persalinan -->
-                    <div class="glass-card rounded-2xl p-6 border-t-4 border-brand-600 bg-brand-50" id="container-persiapan">
+                    <div class="glass-card rounded-[2rem] p-6 sm:p-7 border-t-4 border-brand-600 bg-brand-50 overflow-hidden" id="container-persiapan">
                         <h4 class="text-lg font-bold text-brand-800 mb-2 flex items-center">
                             <svg class="w-6 h-6 mr-2 text-brand-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
                             Persiapan Persalinan (Klinik / RS)
@@ -488,7 +802,7 @@
 
         <!-- VIEW: KONTRAKSI (PENGHITUNG) -->
         <div id="view-kontraksi" class="w-full max-w-2xl mx-auto hide animate-fade-in">
-            <div class="glass-card rounded-2xl p-6 sm:p-8">
+            <div class="glass-card rounded-[2rem] p-6 sm:p-8 overflow-hidden">
                 <div class="flex items-center mb-6 border-b pb-4">
                     <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -548,7 +862,7 @@
 
         <!-- VIEW: PROFIL -->
         <div id="view-profile" class="w-full max-w-md mx-auto hide">
-            <div class="glass-card rounded-2xl p-8">
+            <div class="glass-card rounded-[2rem] p-8 overflow-hidden">
                 <div class="flex items-center mb-6 border-b pb-4">
                     <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -583,7 +897,7 @@
 
         <!-- VIEW: KALKULATOR IMT -->
         <div id="view-imt" class="w-full max-w-2xl mx-auto hide">
-            <div class="glass-card rounded-2xl p-8">
+            <div class="glass-card rounded-[2rem] p-8 overflow-hidden">
                 <div class="flex items-center mb-6 border-b pb-4">
                     <button onclick="showView('dashboard')" class="text-gray-400 hover:text-brand-500 mr-4">
                         <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
@@ -687,12 +1001,12 @@
 
     </main>
 
-    <footer class="bg-white py-6 border-t text-center text-gray-400 text-sm mt-auto">
+    <footer class="py-7 border-t text-center text-gray-400 text-sm mt-auto">
         <p>&copy; 2026 Rumah Bidan. Selalu konsultasikan dengan dokter kandungan Anda.</p>
     </footer>
 
     <!-- Floating WhatsApp Button -->
-    <a href="https://wa.me/6285805579880?text=Halo%20Bidan,%20saya%20ingin%20berkonsultasi%20mengenai%20kehamilan%20saya." target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-full shadow-2xl hover:bg-[#1ebd5c] transition-all duration-300 hover:scale-110 z-50 flex items-center justify-center group cursor-pointer">
+    <a href="https://wa.me/6285805579880?text=Halo%20Bidan,%20saya%20ingin%20berkonsultasi%20mengenai%20kehamilan%20saya." target="_blank" class="fixed bottom-6 right-6 bg-[#25D366] text-white p-4 rounded-[1.35rem] shadow-2xl hover:bg-[#1ebd5c] transition-all duration-300 hover:scale-110 z-50 flex items-center justify-center group cursor-pointer animate-soft-pulse">
         <svg class="w-7 h-7" fill="currentColor" viewBox="0 0 24 24"><path d="M12.031 0C5.383 0 0 5.383 0 12.031c0 2.128.552 4.195 1.6 6.009L.445 24l6.104-1.6c1.758.956 3.743 1.46 5.482 1.46 6.648 0 12.031-5.383 12.031-12.031S18.679 0 12.031 0zm0 21.848c-1.802 0-3.568-.484-5.118-1.403l-.367-.218-3.8.997.997-3.8-.218-.367c-.919-1.55-1.403-3.316-1.403-5.118 0-5.541 4.509-10.05 10.05-10.05 5.541 0 10.05 4.509 10.05 10.05 0 5.541-4.509 10.05-10.05 10.05zm5.513-7.533c-.302-.151-1.785-.881-2.062-.982-.277-.101-.478-.151-.68.151-.201.302-.78 1.006-.957 1.208-.176.201-.352.226-.654.075-1.524-.766-2.613-1.444-3.626-2.909-.258-.372-.03-.564.12-.714.135-.136.302-.352.453-.529.151-.176.201-.302.302-.503.101-.201.05-.377-.025-.528-.075-.151-.68-1.636-.931-2.24-.246-.593-.497-.513-.68-.523-.176-.008-.377-.01-.579-.01-.201 0-.528.075-.805.377-.277.302-1.056 1.032-1.056 2.516s1.082 2.918 1.233 3.12c.151.201 2.128 3.25 5.152 4.553.719.309 1.28.494 1.717.633.722.23 1.38.197 1.897.12.576-.086 1.785-.729 2.036-1.434.251-.705.251-1.308.176-1.434-.076-.126-.277-.202-.579-.353z" /></svg>
         <span class="absolute right-16 bg-white text-gray-800 text-sm font-bold py-2 px-3 rounded-xl shadow-lg opacity-0 group-hover:opacity-100 transition-opacity duration-300 pointer-events-none whitespace-nowrap border border-gray-100">Konsultasi dengan Bidan</span>
     </a>
@@ -985,7 +1299,12 @@
                 }
             }
 
-            document.getElementById(`view-${viewId}`).classList.remove('hide');
+            const activeView = document.getElementById(`view-${viewId}`);
+            activeView.classList.remove('hide');
+            activeView.classList.remove('view-enter');
+            void activeView.offsetWidth;
+            activeView.classList.add('view-enter');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Init App (Sekarang menggunakan mode async karena butuh loading ke Google Sheets)
@@ -1123,7 +1442,7 @@
                 const isAdminBadge = data.name.toUpperCase() === 'ADMIN' ? '<span class="ml-2 bg-red-100 text-red-600 px-2 py-0.5 rounded text-xs font-bold">ADMIN</span>' : '';
                 
                 const tr = document.createElement('tr');
-                tr.className = "border-b border-gray-100 hover:bg-gray-50 transition";
+                tr.className = "border-b border-gray-100 hover:bg-brand-50/70 transition duration-300";
                 tr.innerHTML = `
                     <td class="p-4 text-sm font-semibold text-gray-800">${data.name} ${isAdminBadge}</td>
                     <td class="p-4 text-sm font-bold text-brand-600">${code}</td>
@@ -1597,7 +1916,7 @@
             tbody.innerHTML = contractionState.records.map((rec, index) => {
                 const timeStr = rec.start.toLocaleTimeString([], {hour: '2-digit', minute:'2-digit', second:'2-digit'});
                 return `
-                    <tr class="hover:bg-gray-50">
+                    <tr class="hover:bg-brand-50/70 transition duration-300">
                         <td class="p-3 font-semibold text-gray-800">${timeStr}</td>
                         <td class="p-3 text-brand-600 font-bold">${formatTimeSpan(rec.duration)}</td>
                         <td class="p-3 text-gray-500">${formatTimeSpan(rec.interval)}</td>
