@@ -2,7 +2,11 @@
 <html lang="id">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <meta name="theme-color" content="#ec4899">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="mobile-web-app-capable" content="yes">
     <title>Rumah Bidan - Monitoring Kehamilan</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
@@ -332,11 +336,386 @@
         @media (prefers-reduced-motion: reduce) {
             *, *::before, *::after { animation-duration: .001ms !important; animation-iteration-count: 1 !important; transition-duration: .001ms !important; scroll-behavior: auto !important; }
         }
+
+
+        /* ========================================================================
+        MOBILE APP / WEBVIEW PROFESSIONAL OVERRIDE
+        ======================================================================== */
+        :root {
+            --app-bg: #fff7fb;
+            --app-surface: rgba(255,255,255,.92);
+            --app-line: rgba(244,114,182,.18);
+            --app-shadow: 0 20px 60px rgba(157, 23, 77, .12);
+            --safe-bottom: env(safe-area-inset-bottom, 0px);
+            --safe-top: env(safe-area-inset-top, 0px);
+        }
+
+        body {
+            -webkit-font-smoothing: antialiased;
+            text-rendering: geometricPrecision;
+            padding-top: var(--safe-top);
+        }
+
+        main {
+            width: min(100%, 1180px);
+            padding-bottom: calc(2rem + var(--safe-bottom));
+        }
+
+        .app-loader {
+            position: fixed;
+            inset: 0;
+            z-index: 9999;
+            display: grid;
+            place-items: center;
+            padding: 1.5rem;
+            background:
+                radial-gradient(circle at 25% 18%, rgba(255, 196, 225, .86), transparent 34%),
+                radial-gradient(circle at 78% 84%, rgba(196, 181, 253, .62), transparent 36%),
+                linear-gradient(145deg, rgba(255,247,251,.94), rgba(255,241,247,.96));
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .32s ease, visibility .32s ease;
+        }
+        .app-loader.is-active { opacity: 1; visibility: visible; }
+        .app-loader-card {
+            width: min(92vw, 360px);
+            border-radius: 2rem;
+            padding: 1.5rem;
+            text-align: center;
+            background: rgba(255,255,255,.82);
+            border: 1px solid rgba(255,255,255,.76);
+            box-shadow: 0 28px 88px rgba(190, 24, 93, .22);
+            backdrop-filter: blur(24px) saturate(160%);
+            -webkit-backdrop-filter: blur(24px) saturate(160%);
+            transform: translateY(10px) scale(.98);
+            transition: transform .32s ease;
+        }
+        .app-loader.is-active .app-loader-card { transform: translateY(0) scale(1); }
+        .app-loader-logo {
+            width: 88px;
+            height: 88px;
+            margin: 0 auto 1rem;
+            display: grid;
+            place-items: center;
+            border-radius: 1.8rem;
+            position: relative;
+            background: linear-gradient(145deg, #fff, #ffe4f0);
+            box-shadow: inset 0 1px 0 rgba(255,255,255,.9), 0 20px 40px rgba(236,72,153,.20);
+        }
+        .app-loader-logo::before,
+        .app-loader-logo::after {
+            content: "";
+            position: absolute;
+            inset: -9px;
+            border-radius: 2.1rem;
+            border: 2px solid rgba(236,72,153,.18);
+            animation: loaderRing 1.6s cubic-bezier(.16,1,.3,1) infinite;
+        }
+        .app-loader-logo::after { animation-delay: .45s; }
+        .app-loader-heart {
+            width: 46px;
+            height: 46px;
+            border-radius: 999px;
+            display: grid;
+            place-items: center;
+            color: #fff;
+            font-size: 1.5rem;
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            animation: heartbeat 1.1s ease-in-out infinite;
+            box-shadow: 0 14px 30px rgba(236,72,153,.32);
+        }
+        .app-loader-title { font-weight: 900; color: #831843; letter-spacing: -.02em; }
+        .app-loader-text { color: #6b7280; font-size: .88rem; margin-top: .35rem; line-height: 1.45; }
+        .app-loader-bar {
+            height: 9px;
+            border-radius: 999px;
+            margin-top: 1.05rem;
+            overflow: hidden;
+            background: rgba(236,72,153,.12);
+        }
+        .app-loader-bar span {
+            display: block;
+            width: 48%;
+            height: 100%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #ec4899, #a855f7, #38bdf8);
+            animation: loaderBar 1.25s ease-in-out infinite;
+        }
+        .mini-skeleton {
+            position: relative;
+            overflow: hidden;
+            background: rgba(244,114,182,.10) !important;
+        }
+        .mini-skeleton::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            transform: translateX(-100%);
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.72), transparent);
+            animation: skeletonSweep 1.45s ease-in-out infinite;
+        }
+
+        .mobile-bottom-nav {
+            display: none;
+            position: fixed;
+            left: 1rem;
+            right: 1rem;
+            bottom: calc(.85rem + var(--safe-bottom));
+            z-index: 80;
+            min-height: 74px;
+            padding: .48rem;
+            border-radius: 1.65rem;
+            background: rgba(255,255,255,.82);
+            border: 1px solid rgba(255,255,255,.84);
+            box-shadow: 0 22px 70px rgba(131,24,67,.20);
+            backdrop-filter: blur(22px) saturate(170%);
+            -webkit-backdrop-filter: blur(22px) saturate(170%);
+        }
+        .mobile-bottom-nav::before {
+            content: "";
+            position: absolute;
+            inset: .4rem;
+            border-radius: 1.25rem;
+            background: linear-gradient(135deg, rgba(255,241,247,.72), rgba(255,255,255,.38));
+            pointer-events: none;
+        }
+        .mobile-nav-item {
+            position: relative;
+            z-index: 1;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: .22rem;
+            border-radius: 1.15rem;
+            color: #9ca3af;
+            font-size: .66rem;
+            font-weight: 900;
+            letter-spacing: -.01em;
+            transition: transform .25s ease, color .25s ease, background .25s ease, box-shadow .25s ease;
+        }
+        .mobile-nav-item svg { width: 1.28rem; height: 1.28rem; stroke-width: 2.35; }
+        .mobile-nav-item.active {
+            color: #fff;
+            background: linear-gradient(135deg, #ec4899, #a855f7);
+            box-shadow: 0 12px 32px rgba(236,72,153,.32);
+            transform: translateY(-3px);
+        }
+        .mobile-nav-item:active { transform: translateY(0) scale(.96); }
+
+        .app-toast {
+            position: fixed;
+            left: 50%;
+            bottom: calc(6.25rem + var(--safe-bottom));
+            transform: translateX(-50%) translateY(18px);
+            z-index: 90;
+            max-width: min(92vw, 420px);
+            padding: .85rem 1rem;
+            border-radius: 1rem;
+            background: rgba(31, 41, 55, .92);
+            color: white;
+            font-size: .85rem;
+            font-weight: 800;
+            box-shadow: 0 16px 48px rgba(0,0,0,.22);
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity .28s ease, transform .28s ease, visibility .28s ease;
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+        }
+        .app-toast.show { opacity: 1; visibility: visible; transform: translateX(-50%) translateY(0); }
+
+        .app-page-title {
+            display: none;
+            font-size: .68rem;
+            font-weight: 900;
+            letter-spacing: .13em;
+            text-transform: uppercase;
+            color: rgba(181,22,97,.72);
+        }
+
+        @keyframes loaderRing {
+            0% { transform: scale(.82); opacity: .82; }
+            100% { transform: scale(1.18); opacity: 0; }
+        }
+        @keyframes loaderBar {
+            0% { transform: translateX(-105%); }
+            50% { transform: translateX(60%); }
+            100% { transform: translateX(220%); }
+        }
+        @keyframes skeletonSweep { to { transform: translateX(100%); } }
+
+        @media (hover: none) {
+            .glass-card:hover,
+            #info-makanan > div:hover,
+            #info-keluhan > div:hover,
+            #info-bahaya > div:hover,
+            #info-persiapan > div:hover { transform: none; }
+        }
+
+        @media (max-width: 767px) {
+            html, body { width: 100%; overflow-x: hidden; }
+            body {
+                background:
+                    radial-gradient(circle at 0 0, rgba(255, 184, 218, .58), transparent 36%),
+                    radial-gradient(circle at 100% 0, rgba(196, 181, 253, .45), transparent 32%),
+                    linear-gradient(180deg, #fff7fb 0%, #fff 52%, #fff7fb 100%);
+            }
+            body::before { background-size: 28px 28px; opacity: .34; }
+            nav {
+                position: sticky;
+                top: 0;
+                margin: 0 .65rem;
+                border-radius: 0 0 1.65rem 1.65rem;
+                background: rgba(255,255,255,.86) !important;
+                box-shadow: 0 18px 50px rgba(157,23,77,.10) !important;
+            }
+            nav .max-w-7xl { padding-left: .85rem !important; padding-right: .85rem !important; }
+            nav .min-h-20, nav .h-20 { min-height: 4.6rem !important; padding-block: .7rem !important; align-items: center !important; }
+            nav img { height: 2.7rem !important; width: 2.7rem !important; border-radius: 1rem !important; }
+            nav .brand-gradient-text { font-size: 1.15rem !important; line-height: 1.1; }
+            .app-page-title { display: block; margin-top: .12rem; }
+            #nav-menu { width: auto !important; overflow: visible !important; padding-bottom: 0 !important; }
+            #nav-links-bunda { display: none !important; }
+            #nav-links-admin span { font-size: .62rem; padding: .5rem .65rem; }
+            #nav-menu > button[onclick="logout()"] {
+                width: 2.55rem;
+                height: 2.55rem;
+                padding: 0 !important;
+                font-size: 0 !important;
+                display: grid;
+                place-items: center;
+                background: rgba(254,226,226,.86) !important;
+                border-color: rgba(248,113,113,.22) !important;
+            }
+            #nav-menu > button[onclick="logout()"]::before { content: "↪"; font-size: 1.25rem; line-height: 1; }
+            main {
+                padding: .9rem .88rem 7.2rem !important;
+                max-width: 100% !important;
+            }
+            .mobile-bottom-nav:not(.hide) { display: flex; }
+            footer { display: none; }
+            .fixed.bottom-6.right-6 {
+                bottom: calc(6.1rem + var(--safe-bottom)) !important;
+                right: .95rem !important;
+                padding: .82rem !important;
+                border-radius: 1.1rem !important;
+                z-index: 70 !important;
+            }
+            .fixed.bottom-6.right-6 svg { width: 1.45rem !important; height: 1.45rem !important; }
+            .fixed.bottom-6.right-6 span { display: none !important; }
+
+            .glass-card {
+                border-radius: 1.65rem !important;
+                box-shadow: 0 16px 46px rgba(157, 23, 77, .10) !important;
+                border-color: rgba(255,255,255,.78) !important;
+            }
+            .glass-card::before { opacity: .45; }
+            #view-login { margin-top: .65rem !important; margin-bottom: 1rem !important; }
+            .login-shell { gap: .9rem !important; }
+            .login-hero-card { min-height: auto !important; padding: 1.35rem !important; }
+            .login-hero-card .grid.grid-cols-3 { gap: .55rem !important; }
+            .login-hero-card .price-card { padding: .75rem .45rem !important; border-radius: 1rem !important; }
+            #view-login h1 { font-size: 2rem !important; letter-spacing: -.04em; }
+            #view-login p { line-height: 1.55; }
+            #login-form input { min-height: 3.55rem; border-radius: 1.25rem !important; font-size: 1rem !important; }
+            #login-form button, form button[type="submit"] { min-height: 3.45rem; border-radius: 1.25rem !important; }
+
+            #view-dashboard > .mb-8 {
+                position: relative;
+                margin-bottom: 1rem !important;
+                padding: 1.15rem;
+                border-radius: 1.8rem;
+                background:
+                    radial-gradient(circle at 88% 18%, rgba(255,255,255,.65), transparent 34%),
+                    linear-gradient(135deg, rgba(236,72,153,.94), rgba(168,85,247,.88));
+                color: white;
+                align-items: flex-start !important;
+                box-shadow: 0 24px 72px rgba(168,85,247,.22);
+                overflow: hidden;
+            }
+            #view-dashboard > .mb-8::after {
+                content: "";
+                position: absolute;
+                width: 150px;
+                height: 150px;
+                right: -45px;
+                top: -55px;
+                border-radius: 999px;
+                background: rgba(255,255,255,.18);
+            }
+            #view-dashboard > .mb-8 h2,
+            #view-dashboard > .mb-8 p { color: white !important; position: relative; z-index: 1; }
+            #view-dashboard > .mb-8 h2 { font-size: 1.72rem !important; line-height: 1.1; }
+            #view-dashboard .grid.grid-cols-1.md\:grid-cols-2 { gap: .85rem !important; margin-bottom: .95rem !important; }
+            #view-dashboard .lg\:col-span-1,
+            #view-dashboard .lg\:col-span-2,
+            #view-dashboard .lg\:col-span-3 { margin-top: 0 !important; }
+            #view-dashboard .space-y-6 { gap: .85rem !important; }
+            #view-dashboard .glass-card { padding: 1.05rem !important; }
+            #dash-usia { font-size: 1.45rem !important; }
+            #dash-hpl { font-size: 1.35rem !important; }
+            #dash-sisa-hari,
+            #dash-sisa-jam,
+            #dash-sisa-menit,
+            #dash-sisa-detik { font-size: 1.35rem !important; }
+            #fetal-carousel-img { padding: .35rem !important; }
+            #view-dashboard h4 { font-size: 1rem !important; }
+            #info-makanan > div,
+            #info-keluhan > div,
+            #info-bahaya > div,
+            #info-persiapan > div,
+            #info-vitamin li,
+            #info-pantangan li {
+                border-radius: 1rem !important;
+            }
+
+            #view-admin .grid { gap: .9rem !important; }
+            #view-admin .glass-card { padding: 1rem !important; }
+            #view-admin .overflow-x-auto { margin-left: -.35rem; margin-right: -.35rem; }
+            #view-admin table { font-size: .78rem; }
+            #view-admin th, #view-admin td { padding: .72rem !important; white-space: nowrap; }
+            #view-admin td button { display: inline-flex; margin-bottom: .35rem; border-radius: .8rem !important; }
+
+            #view-kontraksi,
+            #view-imt,
+            #view-profile,
+            #view-setup { max-width: 100% !important; }
+            #view-kontraksi .glass-card,
+            #view-imt .glass-card,
+            #view-profile .glass-card,
+            #view-setup .glass-card { padding: 1.15rem !important; }
+            #contraction-timer { font-size: 3.55rem !important; }
+            #btn-toggle-contraction { width: 100% !important; font-size: 1rem !important; padding-block: 1rem !important; }
+            #view-kontraksi table { min-width: 520px; }
+            #view-kontraksi .overflow-hidden.rounded-xl { overflow-x: auto !important; }
+            #view-imt .grid { gap: 1rem !important; }
+            #view-imt .mt-10 { margin-top: 1.2rem !important; }
+            #view-imt .bg-white.p-6 { padding: 1rem !important; border-radius: 1.25rem !important; }
+        }
+
+        @media (min-width: 768px) {
+            .mobile-bottom-nav { display: none !important; }
+        }
+
     </style>
 </head>
-<body class="text-gray-800 antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-brand-200/70 selection:text-brand-900">
+<body class="app-webview text-gray-800 antialiased min-h-screen flex flex-col overflow-x-hidden selection:bg-brand-200/70 selection:text-brand-900">
 
     <div class="ambient-bg" aria-hidden="true"><span></span><span></span><span></span></div>
+
+    <!-- App Loading Overlay -->
+    <div id="app-loader" class="app-loader is-active" aria-live="polite" aria-busy="true">
+        <div class="app-loader-card">
+            <div class="app-loader-logo"><div class="app-loader-heart">❤</div></div>
+            <div class="app-loader-title">Rumah Bidan</div>
+            <p id="app-loader-text" class="app-loader-text">Menyiapkan aplikasi kehamilan Bunda...</p>
+            <div class="app-loader-bar"><span></span></div>
+        </div>
+    </div>
+    <div id="app-toast" class="app-toast" role="status" aria-live="polite"></div>
+
 
     <!-- Navbar -->
     <nav class="sticky top-0 z-50">
@@ -350,6 +729,7 @@
                     <div>
                         <span class="block font-black text-xl sm:text-2xl tracking-tight brand-gradient-text">Rumah Bidan</span>
                         <span class="hidden sm:block text-[10px] uppercase tracking-[0.28em] font-black text-brand-500/75">Pregnancy Care</span>
+                        <span id="mobile-page-title" class="app-page-title">Pregnancy Care</span>
                     </div>
                 </div>
                 <div class="flex items-center gap-2 sm:gap-3 hide" id="nav-menu">
@@ -1000,6 +1380,28 @@
         </div>
 
     </main>
+
+
+
+    <!-- Mobile Bottom Navigation untuk WebView Android -->
+    <div id="mobile-bottom-nav" class="mobile-bottom-nav hide" aria-label="Navigasi utama aplikasi">
+        <button type="button" class="mobile-nav-item" data-tab="dashboard" onclick="showView('dashboard')" aria-label="Beranda">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6" /></svg>
+            <span>Beranda</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-tab="imt" onclick="showView('imt')" aria-label="Kalkulator IMT">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m-6 4h6m-4 4h2m-6 6h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
+            <span>IMT</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-tab="kontraksi" onclick="showView('kontraksi')" aria-label="Kontraksi">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+            <span>Kontraksi</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-tab="profile" onclick="showProfile()" aria-label="Profil">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M5.121 17.804A8.966 8.966 0 0112 15c2.21 0 4.233.8 5.879 2.128M15 11a3 3 0 11-6 0 3 3 0 016 0z" /><path stroke-linecap="round" stroke-linejoin="round" d="M12 3a9 9 0 100 18 9 9 0 000-18z" /></svg>
+            <span>Profil</span>
+        </button>
+    </div>
 
     <footer class="py-7 border-t text-center text-gray-400 text-sm mt-auto">
         <p>&copy; 2026 Rumah Bidan. Selalu konsultasikan dengan dokter kandungan Anda.</p>
@@ -1982,6 +2384,166 @@
                 insightText.innerHTML = "<strong class='text-green-700'>Kontraksi Belum Teratur.</strong><br>Jarak kontraksi masih renggang atau durasi masih singkat. Ini bisa jadi kontraksi palsu (Braxton Hicks). Cobalah minum air hangat, ganti posisi, dan beristirahat.";
             }
         }
+
+
+
+        /* ========================================================================
+        MOBILE APP SHELL ENHANCEMENT - loading, bottom nav, dan WebView feel
+        ======================================================================== */
+        const AppShell = (() => {
+            let loaderCount = 0;
+            let toastTimer = null;
+            const titles = {
+                login: 'Masuk Aplikasi',
+                setup: 'Data Awal',
+                dashboard: 'Beranda Bunda',
+                imt: 'Kalkulator IMT',
+                kontraksi: 'Timer Kontraksi',
+                profile: 'Profil Bunda',
+                admin: 'Admin Panel'
+            };
+
+            function loader() { return document.getElementById('app-loader'); }
+            function loaderText() { return document.getElementById('app-loader-text'); }
+            function bottomNav() { return document.getElementById('mobile-bottom-nav'); }
+
+            function showLoading(text = 'Memproses data Bunda...') {
+                loaderCount += 1;
+                const el = loader();
+                if (!el) return;
+                const textEl = loaderText();
+                if (textEl) textEl.textContent = text;
+                el.classList.add('is-active');
+                el.setAttribute('aria-busy', 'true');
+            }
+
+            function hideLoading(force = false) {
+                if (force) loaderCount = 0;
+                else loaderCount = Math.max(0, loaderCount - 1);
+                if (loaderCount > 0) return;
+                const el = loader();
+                if (!el) return;
+                window.setTimeout(() => {
+                    if (loaderCount === 0) {
+                        el.classList.remove('is-active');
+                        el.setAttribute('aria-busy', 'false');
+                    }
+                }, 220);
+            }
+
+            function toast(message) {
+                const el = document.getElementById('app-toast');
+                if (!el || !message) return;
+                el.textContent = message;
+                el.classList.add('show');
+                clearTimeout(toastTimer);
+                toastTimer = setTimeout(() => el.classList.remove('show'), 2600);
+            }
+
+            function updateNav(viewId) {
+                document.body.dataset.view = viewId;
+                const titleEl = document.getElementById('mobile-page-title');
+                if (titleEl) titleEl.textContent = titles[viewId] || 'Rumah Bidan';
+
+                const nav = bottomNav();
+                if (nav) {
+                    const shouldShowBottomNav = !state.isAdmin && !['login', 'setup', 'admin'].includes(viewId);
+                    nav.classList.toggle('hide', !shouldShowBottomNav);
+                    nav.querySelectorAll('.mobile-nav-item').forEach(item => {
+                        item.classList.toggle('active', item.dataset.tab === viewId);
+                    });
+                }
+            }
+
+            function decorateTableLoading() {
+                const rows = document.querySelectorAll('#admin-table-body td[colspan="4"], #contraction-list td[colspan="3"]');
+                rows.forEach(td => td.closest('tr')?.classList.add('mini-skeleton'));
+            }
+
+            return { showLoading, hideLoading, toast, updateNav, decorateTableLoading };
+        })();
+
+        window.showAppLoading = AppShell.showLoading;
+        window.hideAppLoading = AppShell.hideLoading;
+        window.showAppToast = AppShell.toast;
+
+        // Loading otomatis untuk proses Google Sheet agar terasa seperti aplikasi native.
+        (() => {
+            const originalFetch = window.fetch ? window.fetch.bind(window) : null;
+            if (!originalFetch) return;
+            window.fetch = async (...args) => {
+                const target = typeof args[0] === 'string' ? args[0] : (args[0]?.url || '');
+                const isSheetRequest = String(target).includes('script.google.com') || String(target).includes(WEB_APP_URL);
+                if (isSheetRequest) AppShell.showLoading('Menghubungkan ke Google Sheet...');
+                try {
+                    return await originalFetch(...args);
+                } finally {
+                    if (isSheetRequest) AppShell.hideLoading();
+                }
+            };
+        })();
+
+        // Sinkronkan bottom nav setiap view berubah tanpa mengubah fungsi utama lama.
+        (() => {
+            const originalShowView = window.showView;
+            window.showView = function(viewId) {
+                const result = originalShowView.apply(this, arguments);
+                AppShell.updateNav(viewId);
+                AppShell.decorateTableLoading();
+                return result;
+            };
+
+            const originalShowProfile = window.showProfile;
+            window.showProfile = function() {
+                const result = originalShowProfile.apply(this, arguments);
+                AppShell.updateNav('profile');
+                return result;
+            };
+
+            const originalRenderAdminTable = window.renderAdminTable;
+            window.renderAdminTable = async function() {
+                AppShell.showLoading('Memuat data pasien...');
+                try {
+                    return await originalRenderAdminTable.apply(this, arguments);
+                } finally {
+                    AppShell.hideLoading();
+                    AppShell.decorateTableLoading();
+                }
+            };
+
+            const originalHandleAdminSubmit = window.handleAdminSubmit;
+            window.handleAdminSubmit = async function(event) {
+                AppShell.showLoading('Menyimpan data pasien...');
+                try {
+                    return await originalHandleAdminSubmit.apply(this, arguments);
+                } finally {
+                    AppShell.hideLoading();
+                }
+            };
+
+            const originalHandleProfileUpdate = window.handleProfileUpdate;
+            window.handleProfileUpdate = async function(event) {
+                AppShell.showLoading('Menyimpan profil Bunda...');
+                try {
+                    return await originalHandleProfileUpdate.apply(this, arguments);
+                } finally {
+                    AppShell.hideLoading();
+                }
+            };
+
+            const originalLogout = window.logout;
+            window.logout = function() {
+                const result = originalLogout.apply(this, arguments);
+                AppShell.updateNav('login');
+                AppShell.toast('Bunda berhasil keluar dari aplikasi.');
+                return result;
+            };
+        })();
+
+        window.addEventListener('load', () => {
+            AppShell.decorateTableLoading();
+            window.setTimeout(() => AppShell.hideLoading(true), 800);
+        });
 
     </script>
 </body>
