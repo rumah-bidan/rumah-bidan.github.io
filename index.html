@@ -223,6 +223,7 @@
         #view-dashboard .lg\:col-span-3 > .glass-card,
         #view-imt .glass-card,
         #view-kontraksi .glass-card,
+        #view-cekbumil .glass-card,
         #view-profile .glass-card,
         #view-admin .glass-card,
         #view-setup .glass-card {
@@ -235,6 +236,7 @@
         #view-admin h2,
         #view-imt h2,
         #view-kontraksi h2,
+        #view-cekbumil h2,
         #view-profile h2 { letter-spacing: -.035em; }
 
         #dash-usia,
@@ -679,10 +681,12 @@
             #view-admin td button { display: inline-flex; margin-bottom: .35rem; border-radius: .8rem !important; }
 
             #view-kontraksi,
+            #view-cekbumil,
             #view-imt,
             #view-profile,
             #view-setup { max-width: 100% !important; }
             #view-kontraksi .glass-card,
+            #view-cekbumil .glass-card,
             #view-imt .glass-card,
             #view-profile .glass-card,
             #view-setup .glass-card { padding: 1.15rem !important; }
@@ -697,6 +701,135 @@
 
         @media (min-width: 768px) {
             .mobile-bottom-nav { display: none !important; }
+        }
+
+
+        /* ========================================================================
+        FITUR CEK BUMIL - TTV, ANEMIA, RISIKO, PERSIAPAN, KEK
+        ======================================================================== */
+        #view-cekbumil .health-hero {
+            background:
+                radial-gradient(circle at 90% 0%, rgba(255,255,255,.44), transparent 38%),
+                linear-gradient(135deg, rgba(236,72,153,.96), rgba(168,85,247,.88));
+            color: #fff;
+            box-shadow: 0 24px 76px rgba(168,85,247,.24);
+        }
+        .health-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: .45rem;
+            border-radius: 999px;
+            padding: .45rem .7rem;
+            font-size: .72rem;
+            font-weight: 900;
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(255,255,255,.78);
+            color: var(--brand-700);
+            box-shadow: 0 10px 28px rgba(157,23,77,.09);
+        }
+        .health-module-card {
+            border-radius: 1.65rem;
+            background: rgba(255,255,255,.78);
+            border: 1px solid rgba(255,255,255,.82);
+            box-shadow: 0 16px 42px rgba(157,23,77,.08);
+        }
+        .health-module-card label { font-weight: 800; color: #374151; }
+        .health-result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+            gap: .85rem;
+        }
+        .health-result-card {
+            border-radius: 1.25rem;
+            border: 1px solid rgba(229,231,235,.9);
+            background: rgba(255,255,255,.86);
+            padding: .9rem;
+            box-shadow: 0 10px 30px rgba(31,41,55,.04);
+        }
+        .health-status-badge {
+            display: inline-flex;
+            align-items: center;
+            border-radius: 999px;
+            padding: .32rem .58rem;
+            font-size: .68rem;
+            font-weight: 900;
+            letter-spacing: .02em;
+            text-transform: uppercase;
+        }
+        .health-note-box {
+            border-radius: 1.25rem;
+            border: 1px solid rgba(244,114,182,.22);
+            background: linear-gradient(135deg, rgba(255,241,247,.82), rgba(255,255,255,.82));
+            padding: 1rem;
+        }
+        .checklist-row {
+            display: flex;
+            gap: .75rem;
+            align-items: flex-start;
+            padding: .78rem .85rem;
+            border-radius: 1rem;
+            background: rgba(255,255,255,.76);
+            border: 1px solid rgba(229,231,235,.72);
+            transition: transform .25s ease, box-shadow .25s ease, border-color .25s ease;
+        }
+        .checklist-row:hover { transform: translateY(-2px); border-color: rgba(244,114,182,.35); box-shadow: 0 12px 28px rgba(157,23,77,.08); }
+        .checklist-row input[type="checkbox"] {
+            width: 1.1rem;
+            height: 1.1rem;
+            margin-top: .15rem;
+            accent-color: #ec4899;
+            flex: 0 0 auto;
+        }
+        .health-progress {
+            height: .68rem;
+            border-radius: 999px;
+            background: rgba(236,72,153,.12);
+            overflow: hidden;
+        }
+        .health-progress > span {
+            display: block;
+            height: 100%;
+            width: 0%;
+            border-radius: inherit;
+            background: linear-gradient(90deg, #ec4899, #a855f7);
+            transition: width .45s cubic-bezier(.16, 1, .3, 1);
+        }
+        .health-mini-nav {
+            display: grid;
+            grid-template-columns: repeat(5, minmax(0, 1fr));
+            gap: .75rem;
+        }
+        .health-mini-nav a {
+            min-height: 4.8rem;
+            border-radius: 1.25rem;
+            padding: .8rem .55rem;
+            background: rgba(255,255,255,.72);
+            border: 1px solid rgba(255,255,255,.86);
+            text-align: center;
+            font-weight: 900;
+            font-size: .75rem;
+            color: #4b5563;
+            box-shadow: 0 12px 30px rgba(157,23,77,.07);
+            transition: transform .25s ease, box-shadow .25s ease;
+        }
+        .health-mini-nav a:hover { transform: translateY(-3px); box-shadow: 0 18px 44px rgba(157,23,77,.11); color: var(--brand-700); }
+        .health-mini-nav span { display: block; font-size: 1.35rem; margin-bottom: .22rem; }
+        .quick-health-card {
+            border-radius: 1.55rem;
+            background: linear-gradient(135deg, rgba(255,255,255,.90), rgba(255,241,247,.78));
+            border: 1px solid rgba(255,255,255,.78);
+            box-shadow: 0 16px 44px rgba(157,23,77,.09);
+        }
+        @media (max-width: 767px) {
+            #view-cekbumil { max-width: 100% !important; }
+            #view-cekbumil .glass-card { padding: 1rem !important; }
+            #view-cekbumil .health-hero { padding: 1.15rem !important; border-radius: 1.7rem !important; }
+            .health-mini-nav { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: .55rem; }
+            .health-mini-nav a { min-height: 4.2rem; font-size: .68rem; border-radius: 1.05rem; }
+            .health-module-card { border-radius: 1.35rem !important; padding: 1rem !important; }
+            .health-result-grid { grid-template-columns: 1fr; }
+            .mobile-nav-item { font-size: .58rem; }
+            .mobile-nav-item svg { width: 1.14rem; height: 1.14rem; }
         }
 
     </style>
@@ -737,6 +870,7 @@
                     <div id="nav-links-bunda" class="flex items-center gap-2">
                         <button onclick="showView('dashboard')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Beranda</button>
                         <button onclick="showView('imt')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Kalkulator IMT</button>
+                        <button onclick="showView('cekbumil')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base">Cek Bumil</button>
                         <button onclick="showView('kontraksi')" class="text-gray-600 hover:text-brand-600 font-extrabold text-sm sm:text-base relative">
                             Kontraksi
                             <span class="absolute -top-1 -right-1 flex h-3 w-3">
@@ -1019,6 +1153,23 @@
                 </div>
             </div>
 
+
+
+            <!-- Quick Access: Cek Bumil Lengkap -->
+            <div class="quick-health-card p-5 sm:p-6 mb-8 overflow-hidden relative">
+                <div class="absolute -right-10 -top-12 w-36 h-36 rounded-full bg-brand-200/45 blur-2xl"></div>
+                <div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4 relative z-10">
+                    <div>
+                        <span class="health-chip mb-3">🩺 Fitur Baru</span>
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Cek Kesehatan Bumil Lengkap</h3>
+                        <p class="text-sm text-gray-600 mt-1 leading-relaxed">Hitung TTV, anemia, KEK, deteksi dini risiko kehamilan, dan checklist persiapan lahiran dalam satu menu.</p>
+                    </div>
+                    <button onclick="showView('cekbumil')" class="bg-gradient-to-r from-brand-500 to-purple-500 text-white font-black px-5 py-3 rounded-2xl shadow-lg shadow-brand-500/25 active:scale-[.98] transition">
+                        Buka Cek Bumil
+                    </button>
+                </div>
+            </div>
+
             <!-- Content Grid -->
             <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
                 <!-- Kolom Kiri: Perkembangan & Medis -->
@@ -1275,6 +1426,196 @@
             </div>
         </div>
 
+
+
+        <!-- VIEW: CEK BUMIL LENGKAP -->
+        <div id="view-cekbumil" class="w-full max-w-6xl mx-auto hide animate-fade-in">
+            <div class="health-hero glass-card rounded-[2rem] p-6 sm:p-8 mb-6 overflow-hidden relative">
+                <div class="absolute -right-12 -top-16 w-48 h-48 rounded-full bg-white/15 blur-xl"></div>
+                <div class="relative z-10 flex items-start gap-4">
+                    <button onclick="showView('dashboard')" class="bg-white/18 hover:bg-white/25 text-white rounded-2xl p-3 transition shrink-0">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"></path></svg>
+                    </button>
+                    <div>
+                        <span class="inline-flex items-center bg-white/18 border border-white/24 px-3 py-1 rounded-full text-xs font-black uppercase tracking-wider mb-3">🩺 Cek Bumil</span>
+                        <h2 class="text-2xl sm:text-4xl font-black tracking-tight leading-tight">Pemeriksaan Mandiri Ibu Hamil</h2>
+                        <p class="text-white/85 text-sm sm:text-base mt-2 max-w-3xl leading-relaxed">Fitur ini membantu Bunda mencatat TTV, anemia, KEK, risiko kehamilan, dan kesiapan lahiran. Hasil bersifat edukasi awal dan tetap perlu dikonfirmasi ke bidan atau dokter.</p>
+                    </div>
+                </div>
+            </div>
+
+            <div class="health-mini-nav mb-6">
+                <a href="#fitur-ttv"><span>🩺</span>TTV Bumil</a>
+                <a href="#fitur-anemia"><span>🩸</span>Anemia</a>
+                <a href="#fitur-risiko"><span>⚠️</span>Risiko Dini</a>
+                <a href="#fitur-lahiran"><span>🧳</span>Persiapan</a>
+                <a href="#fitur-kek"><span>🍽️</span>KEK</a>
+            </div>
+
+            <!-- Kalkulator TTV -->
+            <section id="fitur-ttv" class="glass-card rounded-[2rem] p-6 sm:p-7 mb-6 overflow-hidden">
+                <div class="flex items-start justify-between gap-4 mb-5">
+                    <div>
+                        <span class="health-chip mb-3">1. Tanda-Tanda Vital</span>
+                        <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Kalkulator TTV Bumil</h3>
+                        <p class="text-sm text-gray-600 mt-1 leading-relaxed">Isi hasil pengukuran dari rumah, posyandu, klinik, atau bidan. Sistem akan memberi kategori normal/perlu perhatian pada tiap item.</p>
+                    </div>
+                    <div class="hidden sm:grid w-14 h-14 rounded-2xl bg-pink-50 text-brand-500 place-items-center text-2xl">🩺</div>
+                </div>
+                <form onsubmit="calculateTTV(event)" class="health-module-card p-5 mb-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+                        <div>
+                            <label class="block text-sm mb-1">Tensi Sistolik (mmHg)</label>
+                            <input id="ttv-sistolik" type="number" inputmode="numeric" min="50" max="250" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 120" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Tensi Diastolik (mmHg)</label>
+                            <input id="ttv-diastolik" type="number" inputmode="numeric" min="30" max="160" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 80" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Berat Badan Sekarang (kg)</label>
+                            <input id="ttv-bb" type="number" inputmode="decimal" step="0.1" min="25" max="200" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 62" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">BB Sebelum Hamil (kg)</label>
+                            <input id="ttv-bb-awal" type="number" inputmode="decimal" step="0.1" min="25" max="200" class="w-full px-4 py-3 rounded-xl" placeholder="Opsional: 55">
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">LILA (cm)</label>
+                            <input id="ttv-lila" type="number" inputmode="decimal" step="0.1" min="10" max="60" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 24" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Tinggi Badan (cm)</label>
+                            <input id="ttv-tb" type="number" inputmode="numeric" min="120" max="210" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 155" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">DJJ / Detak Jantung Janin (x/menit)</label>
+                            <input id="ttv-djj" type="number" inputmode="numeric" min="40" max="240" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 145" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">TFU / Tinggi Fundus Uteri (cm)</label>
+                            <input id="ttv-tfu" type="number" inputmode="decimal" step="0.1" min="0" max="60" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 28" required>
+                        </div>
+                        <div>
+                            <label class="block text-sm mb-1">Usia Kehamilan (minggu)</label>
+                            <input id="ttv-week" type="number" inputmode="numeric" min="1" max="43" class="w-full px-4 py-3 rounded-xl" placeholder="Otomatis dari HPHT">
+                        </div>
+                    </div>
+                    <button type="submit" class="mt-5 w-full bg-gradient-to-r from-brand-500 to-purple-500 text-white font-black py-3 px-4 rounded-2xl shadow-lg shadow-brand-500/25">Analisis TTV</button>
+                </form>
+                <div id="ttv-result" class="hide"></div>
+                <div class="health-note-box mt-4 text-sm text-gray-700 leading-relaxed"><strong>Catatan penting:</strong> setiap hasil checklist TTV ini sebaiknya ditanyakan kembali kepada bidan atau dokter, terutama bila muncul kategori kurang, lebih, tinggi, rendah, atau tidak normal.</div>
+            </section>
+
+            <!-- Anemia -->
+            <section id="fitur-anemia" class="glass-card rounded-[2rem] p-6 sm:p-7 mb-6 overflow-hidden">
+                <div class="mb-5">
+                    <span class="health-chip mb-3">2. Hemoglobin</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Kalkulator Anemia pada Bumil</h3>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">Masukkan kadar Hb dari hasil pemeriksaan laboratorium untuk mengetahui kategori awal anemia.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <form onsubmit="calculateAnemia(event)" class="health-module-card p-5 h-fit">
+                        <label class="block text-sm mb-1">Kadar Hb (g/dL)</label>
+                        <input id="anemia-hb" type="number" inputmode="decimal" step="0.1" min="3" max="20" class="w-full px-4 py-3 rounded-xl mb-4" placeholder="Contoh: 10.8" required>
+                        <button type="submit" class="w-full bg-red-500 hover:bg-red-600 text-white font-black py-3 px-4 rounded-2xl shadow-lg shadow-red-500/20">Cek Anemia</button>
+                    </form>
+                    <div id="anemia-result" class="health-module-card p-5 text-sm text-gray-600 leading-relaxed">
+                        <p class="font-bold text-gray-800 mb-2">Penjelasan singkat</p>
+                        <p>Anemia pada kehamilan terjadi ketika kadar hemoglobin lebih rendah dari normal sehingga tubuh lebih sulit membawa oksigen. Risiko yang perlu diwaspadai antara lain ibu mudah lelah, pusing, dan risiko gangguan pada ibu maupun bayi.</p>
+                    </div>
+                </div>
+                <div class="health-note-box mt-4 text-sm text-gray-700 leading-relaxed"><strong>Keterangan:</strong> bila hasil masuk kategori kurang, anemia ringan, atau anemia sedang-berat, hubungi bidan atau dokter untuk pemeriksaan dan tata laksana lebih lanjut.</div>
+            </section>
+
+            <!-- Risiko Kehamilan -->
+            <section id="fitur-risiko" class="glass-card rounded-[2rem] p-6 sm:p-7 mb-6 overflow-hidden">
+                <div class="mb-5">
+                    <span class="health-chip mb-3">3. Deteksi Dini</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Checklist Risiko Kehamilan Menurut Usia Kehamilan</h3>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">Checklist otomatis menyesuaikan trimester. Centang kondisi yang dialami, lalu lihat hasil ringkasnya.</p>
+                </div>
+                <form onsubmit="calculateRiskChecklist(event)" class="health-module-card p-5">
+                    <div class="grid grid-cols-1 sm:grid-cols-[220px_1fr] gap-4 items-start mb-4">
+                        <div>
+                            <label class="block text-sm mb-1">Usia Kehamilan (minggu)</label>
+                            <input id="risk-week" type="number" min="1" max="43" class="w-full px-4 py-3 rounded-xl" placeholder="Otomatis dari HPHT" oninput="renderRiskChecklist()">
+                        </div>
+                        <div class="bg-yellow-50 border border-yellow-100 rounded-2xl p-4 text-sm text-yellow-800 leading-relaxed">
+                            Hasil deteksi dini ini mengacu pada prinsip pemantauan Buku KIA/Kemenkes dan tanda bahaya kehamilan. Bila ada keluhan berat, jangan menunggu semua item terisi.
+                        </div>
+                    </div>
+                    <div id="risk-checklist-container" class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-5"></div>
+                    <button type="submit" class="w-full bg-yellow-500 hover:bg-yellow-600 text-white font-black py-3 px-4 rounded-2xl shadow-lg shadow-yellow-500/20">Lihat Hasil Risiko</button>
+                </form>
+                <div id="risk-result" class="hide mt-5"></div>
+                <div class="health-note-box mt-4 text-sm text-gray-700 leading-relaxed"><strong>Hubungi dokter atau bidan</strong> untuk keterangan lebih lanjut, terutama bila hasil menunjukkan risiko sedang/tinggi atau terdapat tanda bahaya.</div>
+            </section>
+
+            <!-- Persiapan Lahiran -->
+            <section id="fitur-lahiran" class="glass-card rounded-[2rem] p-6 sm:p-7 mb-6 overflow-hidden">
+                <div class="mb-5">
+                    <span class="health-chip mb-3">4. Checklist Lahiran</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Checklist Persiapan Lahiran</h3>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">Daftar ini membantu Bunda menyiapkan perlengkapan ibu, bayi, dokumen, pendamping, transportasi, kesehatan, keuangan, mental/ilmu, dan perlengkapan tambahan.</p>
+                </div>
+                <div class="health-module-card p-5 mb-5">
+                    <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 mb-3">
+                        <div>
+                            <p class="font-black text-gray-800">Progress Persiapan</p>
+                            <p class="text-xs text-gray-500">Tersimpan otomatis di perangkat yang sama.</p>
+                        </div>
+                        <p id="birth-progress-text" class="text-2xl font-black brand-gradient-text">0%</p>
+                    </div>
+                    <div class="health-progress"><span id="birth-progress-bar"></span></div>
+                </div>
+                <div id="birth-checklist-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4"></div>
+                <div class="mt-5 flex flex-col sm:flex-row gap-3">
+                    <button onclick="resetBirthChecklist()" type="button" class="flex-1 bg-gray-100 hover:bg-gray-200 text-gray-700 font-black py-3 rounded-2xl">Reset Checklist</button>
+                    <button onclick="printBirthChecklistSummary()" type="button" class="flex-1 bg-brand-500 hover:bg-brand-600 text-white font-black py-3 rounded-2xl">Ringkas Kesiapan</button>
+                </div>
+                <div id="birth-result" class="hide mt-5"></div>
+            </section>
+
+            <!-- KEK -->
+            <section id="fitur-kek" class="glass-card rounded-[2rem] p-6 sm:p-7 mb-2 overflow-hidden">
+                <div class="mb-5">
+                    <span class="health-chip mb-3">5. Status Gizi</span>
+                    <h3 class="text-xl sm:text-2xl font-black text-gray-900 tracking-tight">Kalkulator KEK Bumil</h3>
+                    <p class="text-sm text-gray-600 mt-1 leading-relaxed">Cek risiko Kekurangan Energi Kronik dari LILA dan IMT pra-hamil/trimester 1.</p>
+                </div>
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-5">
+                    <form onsubmit="calculateKEK(event)" class="health-module-card p-5 h-fit">
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+                            <div>
+                                <label class="block text-sm mb-1">LILA (cm)</label>
+                                <input id="kek-lila" type="number" inputmode="decimal" step="0.1" min="10" max="60" class="w-full px-4 py-3 rounded-xl" placeholder="Contoh: 22.8" required>
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Usia Kehamilan (minggu)</label>
+                                <input id="kek-week" type="number" min="1" max="43" class="w-full px-4 py-3 rounded-xl" placeholder="Otomatis dari HPHT">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">BB Pra-hamil / Trimester 1 (kg)</label>
+                                <input id="kek-bb" type="number" inputmode="decimal" step="0.1" min="25" max="200" class="w-full px-4 py-3 rounded-xl" placeholder="Opsional: 48">
+                            </div>
+                            <div>
+                                <label class="block text-sm mb-1">Tinggi Badan (cm)</label>
+                                <input id="kek-tb" type="number" min="120" max="210" class="w-full px-4 py-3 rounded-xl" placeholder="Opsional: 155">
+                            </div>
+                        </div>
+                        <button type="submit" class="mt-5 w-full bg-green-500 hover:bg-green-600 text-white font-black py-3 px-4 rounded-2xl shadow-lg shadow-green-500/20">Cek Risiko KEK</button>
+                    </form>
+                    <div id="kek-result" class="health-module-card p-5 text-sm text-gray-600 leading-relaxed">
+                        <p class="font-bold text-gray-800 mb-2">Saran makan untuk mencegah KEK</p>
+                        <p>Makan utama bergizi seimbang 3 kali sehari, tambah kudapan sehat 2 kali sehari, utamakan protein hewani, sumber zat besi, karbohidrat cukup, lemak sehat, sayur, buah, dan air putih. Bila tersedia, ikuti program makanan tambahan dari puskesmas sesuai arahan tenaga kesehatan.</p>
+                    </div>
+                </div>
+                <div class="health-note-box mt-4 text-sm text-gray-700 leading-relaxed"><strong>Keterangan:</strong> bila hasil menunjukkan LILA kurang, IMT kurang, atau kenaikan berat badan tidak sesuai, silakan hubungi bidan atau dokter untuk keterangan lebih lanjut.</div>
+            </section>
+        </div>
+
+
         <!-- VIEW: KALKULATOR IMT -->
         <div id="view-imt" class="w-full max-w-2xl mx-auto hide">
             <div class="glass-card rounded-[2rem] p-8 overflow-hidden">
@@ -1392,6 +1733,10 @@
         <button type="button" class="mobile-nav-item" data-tab="imt" onclick="showView('imt')" aria-label="Kalkulator IMT">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 7h6m-6 4h6m-4 4h2m-6 6h10a2 2 0 002-2V5a2 2 0 00-2-2H7a2 2 0 00-2 2v14a2 2 0 002 2z" /></svg>
             <span>IMT</span>
+        </button>
+        <button type="button" class="mobile-nav-item" data-tab="cekbumil" onclick="showView('cekbumil')" aria-label="Cek Bumil">
+            <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M9 12l2 2 4-4M7 3h10a2 2 0 012 2v14a2 2 0 01-2 2H7a2 2 0 01-2-2V5a2 2 0 012-2z" /></svg>
+            <span>Cek</span>
         </button>
         <button type="button" class="mobile-nav-item" data-tab="kontraksi" onclick="showView('kontraksi')" aria-label="Kontraksi">
             <svg fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M14.752 11.168l-3.197-2.132A1 1 0 0010 9.87v4.263a1 1 0 001.555.832l3.197-2.132a1 1 0 000-1.664z" /><path stroke-linecap="round" stroke-linejoin="round" d="M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
@@ -1683,6 +2028,7 @@
             document.getElementById('view-profile').classList.add('hide');
             document.getElementById('view-admin').classList.add('hide');
             document.getElementById('view-kontraksi').classList.add('hide');
+            document.getElementById('view-cekbumil').classList.add('hide');
 
             const navMenu = document.getElementById('nav-menu');
             const navBunda = document.getElementById('nav-links-bunda');
@@ -1706,6 +2052,7 @@
             activeView.classList.remove('view-enter');
             void activeView.offsetWidth;
             activeView.classList.add('view-enter');
+            if(viewId === 'cekbumil' && typeof initCekBumil === 'function') initCekBumil();
             window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
@@ -2226,6 +2573,371 @@
             document.getElementById('imt-solution').textContent = solution;
         }
 
+
+
+        /* ========================================================================
+        FITUR CEK BUMIL: TTV, ANEMIA, RISIKO, PERSIAPAN LAHIRAN, KEK
+        ======================================================================== */
+        function numberValue(id) {
+            const el = document.getElementById(id);
+            if (!el) return NaN;
+            return parseFloat(String(el.value).replace(',', '.'));
+        }
+
+        function pregnancyWeekValue(inputId) {
+            const manual = numberValue(inputId);
+            if (!Number.isNaN(manual) && manual > 0) return manual;
+            if (state && Number(state.weeks) > 0) return Number(state.weeks);
+            return 0;
+        }
+
+        function statusBadge(status, tone = 'green') {
+            const map = {
+                green: 'bg-green-100 text-green-700',
+                yellow: 'bg-yellow-100 text-yellow-700',
+                red: 'bg-red-100 text-red-700',
+                blue: 'bg-blue-100 text-blue-700',
+                gray: 'bg-gray-100 text-gray-700',
+                purple: 'bg-purple-100 text-purple-700'
+            };
+            return `<span class="health-status-badge ${map[tone] || map.gray}">${status}</span>`;
+        }
+
+        function healthCard(title, value, status, tone, note) {
+            return `
+                <div class="health-result-card">
+                    <div class="flex items-start justify-between gap-2 mb-2">
+                        <p class="text-xs uppercase tracking-wider font-black text-gray-400">${title}</p>
+                        ${statusBadge(status, tone)}
+                    </div>
+                    <p class="text-xl font-black text-gray-900 mb-2">${value}</p>
+                    <p class="text-sm text-gray-600 leading-relaxed">${note}</p>
+                </div>
+            `;
+        }
+
+        function gainRangeByBMI(bmi, weeks) {
+            let category = 'normal';
+            let rate = [0.35, 0.50];
+            let total = [11.5, 16];
+            if (bmi < 18.5) { category = 'kurus'; rate = [0.44, 0.58]; total = [12.5, 18]; }
+            else if (bmi >= 25 && bmi < 30) { category = 'overweight'; rate = [0.23, 0.33]; total = [7, 11.5]; }
+            else if (bmi >= 30) { category = 'obesitas'; rate = [0.17, 0.27]; total = [5, 9]; }
+
+            if (weeks <= 0) return { category, min: null, max: null, total };
+            if (weeks <= 13) return { category, min: 0.5, max: 2, total };
+            const afterFirstTrimester = weeks - 13;
+            return {
+                category,
+                min: +(0.5 + rate[0] * afterFirstTrimester).toFixed(1),
+                max: +(2 + rate[1] * afterFirstTrimester).toFixed(1),
+                total
+            };
+        }
+
+        function calculateTTV(e) {
+            e.preventDefault();
+            const sys = numberValue('ttv-sistolik');
+            const dia = numberValue('ttv-diastolik');
+            const bb = numberValue('ttv-bb');
+            const bbAwal = numberValue('ttv-bb-awal');
+            const lila = numberValue('ttv-lila');
+            const tb = numberValue('ttv-tb');
+            const djj = numberValue('ttv-djj');
+            const tfu = numberValue('ttv-tfu');
+            const weeks = pregnancyWeekValue('ttv-week');
+            const cards = [];
+
+            if (sys >= 160 || dia >= 110) {
+                cards.push(healthCard('Tensi Darah', `${sys}/${dia} mmHg`, 'Sangat Tinggi', 'red', 'Nilai ini termasuk tanda bahaya. Segera hubungi bidan/dokter atau fasilitas kesehatan.'));
+            } else if (sys >= 140 || dia >= 90) {
+                cards.push(healthCard('Tensi Darah', `${sys}/${dia} mmHg`, 'Tinggi', 'red', 'Tekanan darah tinggi pada kehamilan perlu pemeriksaan lanjutan untuk menyingkirkan risiko preeklampsia.'));
+            } else if (sys < 90 || dia < 60) {
+                cards.push(healthCard('Tensi Darah', `${sys}/${dia} mmHg`, 'Rendah', 'yellow', 'Bisa berkaitan dengan kurang cairan, lemas, atau kondisi lain. Istirahat dan konsultasikan bila pusing/lemas.'));
+            } else {
+                cards.push(healthCard('Tensi Darah', `${sys}/${dia} mmHg`, 'Normal', 'green', 'Tetap pantau secara rutin pada setiap kunjungan ANC/posyandu.'));
+            }
+
+            if (!Number.isNaN(bbAwal) && bbAwal > 0 && !Number.isNaN(tb) && tb > 0) {
+                const bmi = bbAwal / Math.pow(tb / 100, 2);
+                const gain = +(bb - bbAwal).toFixed(1);
+                const range = gainRangeByBMI(bmi, weeks);
+                if (range.min !== null && gain < range.min - 0.5) {
+                    cards.push(healthCard('Berat Badan', `${bb} kg • naik ${gain} kg`, 'Kurang', 'yellow', `Perkiraan kenaikan pada ${weeks || '-'} minggu sekitar ${range.min}-${range.max} kg. Evaluasi asupan makan dan konsultasikan ke bidan/dokter.`));
+                } else if (range.min !== null && gain > range.max + 0.5) {
+                    cards.push(healthCard('Berat Badan', `${bb} kg • naik ${gain} kg`, 'Lebih', 'yellow', `Kenaikan melebihi perkiraan ${range.min}-${range.max} kg. Hindari diet ketat; minta arahan tenaga kesehatan.`));
+                } else if (range.min !== null) {
+                    cards.push(healthCard('Berat Badan', `${bb} kg • naik ${gain} kg`, 'Sesuai', 'green', `Kenaikan berada dekat rentang perkiraan ${range.min}-${range.max} kg untuk usia kehamilan saat ini.`));
+                } else {
+                    cards.push(healthCard('Berat Badan', `${bb} kg`, 'Tercatat', 'blue', 'Berat badan sudah tercatat. Isi usia kehamilan untuk menilai kenaikan lebih akurat.'));
+                }
+            } else {
+                cards.push(healthCard('Berat Badan', `${bb} kg`, 'Perlu Pembanding', 'blue', 'Untuk menilai normal/tidak, butuh BB sebelum hamil dan tinggi badan. Catat rutin di Buku KIA/kunjungan ANC.'));
+            }
+
+            if (lila < 23.5) cards.push(healthCard('LILA', `${lila} cm`, 'Risiko KEK', 'red', 'LILA kurang dari 23,5 cm menandakan risiko Kekurangan Energi Kronik. Perlu konseling gizi dan evaluasi tenaga kesehatan.'));
+            else cards.push(healthCard('LILA', `${lila} cm`, 'Normal', 'green', 'LILA berada pada batas aman. Tetap pertahankan makan bergizi seimbang.'));
+
+            if (tb < 145) cards.push(healthCard('Tinggi Badan', `${tb} cm`, 'Perlu Perhatian', 'yellow', 'Tinggi badan kurang dari 145 cm dapat menjadi faktor risiko persalinan tertentu. Diskusikan rencana lahiran sejak awal.'));
+            else cards.push(healthCard('Tinggi Badan', `${tb} cm`, 'Normal', 'green', 'Tinggi badan tidak termasuk faktor risiko pendek pada skrining sederhana ini.'));
+
+            if (djj < 110) cards.push(healthCard('DJJ', `${djj} x/menit`, 'Kurang', 'red', 'Detak jantung janin di bawah rentang umum. Ulangi pengukuran dan segera konsultasi jika tetap rendah atau ada keluhan.'));
+            else if (djj > 160) cards.push(healthCard('DJJ', `${djj} x/menit`, 'Lebih', 'red', 'Detak jantung janin di atas rentang umum. Perlu dipastikan dengan pemeriksaan bidan/dokter.'));
+            else cards.push(healthCard('DJJ', `${djj} x/menit`, 'Normal', 'green', 'DJJ berada pada rentang umum 110-160 kali per menit.'));
+
+            if (weeks >= 20) {
+                const diff = +(tfu - weeks).toFixed(1);
+                if (Math.abs(diff) <= 2) cards.push(healthCard('TFU', `${tfu} cm`, 'Sesuai', 'green', 'Pada usia ≥20 minggu, TFU biasanya mendekati usia kehamilan dalam minggu dengan toleransi sekitar ±2 cm.'));
+                else if (diff < -2) cards.push(healthCard('TFU', `${tfu} cm`, 'Kurang', 'yellow', 'TFU lebih kecil dari perkiraan usia kehamilan. Bisa dipengaruhi posisi janin, cairan ketuban, atau pertumbuhan; perlu evaluasi.'));
+                else cards.push(healthCard('TFU', `${tfu} cm`, 'Lebih', 'yellow', 'TFU lebih besar dari perkiraan usia kehamilan. Bisa dipengaruhi posisi janin, cairan ketuban, atau ukuran janin; perlu evaluasi.'));
+            } else {
+                cards.push(healthCard('TFU', `${tfu} cm`, 'Belum Patokan Utama', 'blue', 'TFU sebelum 20 minggu belum selalu cocok dengan rumus minggu=cm. Pastikan dengan pemeriksaan bidan/dokter.'));
+            }
+
+            document.getElementById('ttv-result').classList.remove('hide');
+            document.getElementById('ttv-result').innerHTML = `
+                <div class="health-result-grid">${cards.join('')}</div>
+                <div class="mt-4 p-4 rounded-2xl bg-blue-50 border border-blue-100 text-sm text-blue-800 leading-relaxed">
+                    <strong>Kesimpulan:</strong> Hasil ini adalah skrining mandiri. Bila ada kategori tinggi, rendah, kurang, lebih, atau gejala seperti sakit kepala hebat, pandangan kabur, perdarahan, demam, ketuban rembes, atau gerakan janin berkurang, segera hubungi tenaga kesehatan.
+                </div>`;
+        }
+
+        function calculateAnemia(e) {
+            e.preventDefault();
+            const hb = numberValue('anemia-hb');
+            let tone = 'green', title = 'Hb Normal', intro = '', action = '';
+            if (hb >= 11) {
+                intro = 'Kadar Hb berada pada batas normal untuk skrining ibu hamil.';
+                action = 'Tetap konsumsi makanan bergizi seimbang, protein hewani, sumber zat besi, buah kaya vitamin C, dan TTD sesuai anjuran bidan/dokter.';
+            } else if (hb >= 10) {
+                tone = 'yellow'; title = 'Anemia Ringan';
+                intro = 'Hb 10-10,9 g/dL termasuk anemia ringan dan perlu tata laksana dari tenaga kesehatan.';
+                action = 'Jangan menambah dosis obat sendiri. Konsultasikan ke bidan/dokter, patuhi TTD/MMS bila diberikan, tambah protein hewani, sayur hijau, kacang-kacangan, dan konsumsi vitamin C agar penyerapan zat besi lebih baik.';
+            } else {
+                tone = 'red'; title = 'Anemia Sedang-Berat';
+                intro = 'Hb kurang dari 10 g/dL perlu evaluasi segera karena dapat berisiko bagi ibu dan janin.';
+                action = 'Segera hubungi bidan/dokter atau puskesmas/RS untuk pemeriksaan lanjutan. Perbanyak makanan tinggi zat besi, namun tata laksana utama tetap mengikuti tenaga kesehatan.';
+            }
+            document.getElementById('anemia-result').innerHTML = `
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-black text-gray-400">Hasil Hb</p>
+                        <p class="text-4xl font-black text-gray-900">${hb.toFixed(1)} <span class="text-base text-gray-500">g/dL</span></p>
+                    </div>
+                    ${statusBadge(title, tone)}
+                </div>
+                <div class="space-y-3 text-sm text-gray-700 leading-relaxed">
+                    <p>${intro}</p>
+                    <div class="p-4 rounded-2xl bg-white border border-gray-100">
+                        <p class="font-black text-green-700 mb-1">Cara mengatasi dan mencegah</p>
+                        <p>${action}</p>
+                    </div>
+                    <div class="p-4 rounded-2xl bg-pink-50 border border-pink-100 text-pink-800">
+                        <strong>Catatan:</strong> bila Hb kurang dari normal, silakan hubungi bidan atau dokter untuk keterangan dan pemeriksaan lebih lanjut.
+                    </div>
+                </div>`;
+        }
+
+        const riskChecklistData = [
+            { id: 'age-risk', trimester: 'all', severity: 'medium', text: 'Usia ibu kurang dari 20 tahun atau lebih dari 35 tahun' },
+            { id: 'prev-complication', trimester: 'all', severity: 'medium', text: 'Pernah operasi caesar, perdarahan berat, bayi meninggal, atau komplikasi kehamilan sebelumnya' },
+            { id: 'chronic-disease', trimester: 'all', severity: 'high', text: 'Memiliki hipertensi, diabetes, penyakit jantung, ginjal, TB, asma berat, atau penyakit kronis lain' },
+            { id: 'short-height', trimester: 'all', severity: 'medium', text: 'Tinggi badan kurang dari 145 cm atau panggul pernah dinilai sempit' },
+            { id: 'kek-anemia', trimester: 'all', severity: 'medium', text: 'LILA kurang dari 23,5 cm, sangat kurus, atau pernah dinyatakan anemia/KEK' },
+            { id: 'bleeding', trimester: 'all', severity: 'high', text: 'Perdarahan dari jalan lahir/flek banyak' },
+            { id: 'severe-headache', trimester: 'all', severity: 'high', text: 'Sakit kepala hebat, pandangan kabur, bengkak wajah/tangan, atau nyeri ulu hati' },
+            { id: 'fever', trimester: 'all', severity: 'medium', text: 'Demam tinggi, menggigil, atau tampak sangat lemas' },
+            { id: 'vomit', trimester: 't1', severity: 'medium', text: 'Mual muntah terus menerus sampai sulit makan/minum' },
+            { id: 'pain-t1', trimester: 't1', severity: 'high', text: 'Nyeri perut hebat atau kram kuat pada trimester 1' },
+            { id: 'movement', trimester: 't2t3', severity: 'high', text: 'Gerakan janin berkurang/tidak terasa seperti biasanya' },
+            { id: 'fluid', trimester: 't2t3', severity: 'high', text: 'Air ketuban rembes/pecah sebelum waktunya' },
+            { id: 'early-contraction', trimester: 't2t3', severity: 'high', text: 'Kontraksi teratur atau nyeri pinggang hebat sebelum 37 minggu' },
+            { id: 'breath', trimester: 't2t3', severity: 'medium', text: 'Sesak napas berat, dada berdebar berat, atau pingsan' },
+            { id: 'third-bleed', trimester: 't3', severity: 'high', text: 'Perdarahan pada trimester 3 atau nyeri perut disertai perut kencang terus menerus' },
+            { id: 'seizure', trimester: 'all', severity: 'high', text: 'Kejang, penurunan kesadaran, atau pingsan berulang' }
+        ];
+
+        function riskTrimester(weeks) {
+            if (weeks <= 13) return 't1';
+            if (weeks <= 27) return 't2';
+            return 't3';
+        }
+
+        function renderRiskChecklist() {
+            const container = document.getElementById('risk-checklist-container');
+            if (!container) return;
+            const weeks = pregnancyWeekValue('risk-week') || state.weeks || 12;
+            const tri = riskTrimester(weeks);
+            const allowed = riskChecklistData.filter(item => {
+                if (item.trimester === 'all') return true;
+                if (item.trimester === 't1') return tri === 't1';
+                if (item.trimester === 't2') return tri === 't2';
+                if (item.trimester === 't3') return tri === 't3';
+                if (item.trimester === 't2t3') return tri === 't2' || tri === 't3';
+                return true;
+            });
+            container.innerHTML = allowed.map(item => `
+                <label class="checklist-row">
+                    <input type="checkbox" name="risk-item" value="${item.id}" data-severity="${item.severity}">
+                    <span class="text-sm text-gray-700 leading-relaxed"><strong class="${item.severity === 'high' ? 'text-red-600' : 'text-yellow-700'}">${item.severity === 'high' ? 'Tanda bahaya' : 'Perlu perhatian'}:</strong> ${item.text}</span>
+                </label>
+            `).join('');
+        }
+
+        function calculateRiskChecklist(e) {
+            e.preventDefault();
+            const weeks = pregnancyWeekValue('risk-week') || state.weeks || 0;
+            const checked = Array.from(document.querySelectorAll('input[name="risk-item"]:checked'));
+            const high = checked.filter(i => i.dataset.severity === 'high');
+            const medium = checked.filter(i => i.dataset.severity !== 'high');
+            let tone = 'green', title = 'Risiko rendah dari checklist', message = 'Tidak ada tanda risiko yang dicentang. Tetap lakukan ANC rutin sesuai jadwal dan pantau tanda bahaya.';
+            if (high.length > 0) {
+                tone = 'red'; title = 'Risiko tinggi / tanda bahaya';
+                message = `Ada ${high.length} tanda bahaya yang dicentang. Segera hubungi bidan/dokter atau fasilitas kesehatan untuk pemeriksaan langsung.`;
+            } else if (medium.length > 0) {
+                tone = 'yellow'; title = 'Perlu konsultasi';
+                message = `Ada ${medium.length} faktor risiko/perlu perhatian. Jadwalkan konsultasi dengan bidan/dokter agar rencana pemantauan kehamilan lebih aman.`;
+            }
+            const picked = checked.map(i => i.closest('label').innerText.trim()).join('</li><li>');
+            document.getElementById('risk-result').classList.remove('hide');
+            document.getElementById('risk-result').innerHTML = `
+                <div class="health-module-card p-5">
+                    <div class="flex flex-col sm:flex-row sm:items-start sm:justify-between gap-3 mb-3">
+                        <div>
+                            <p class="text-xs uppercase tracking-wider font-black text-gray-400">Hasil usia kehamilan ${weeks || '-'} minggu</p>
+                            <h4 class="text-2xl font-black text-gray-900">${title}</h4>
+                        </div>
+                        ${statusBadge(title, tone)}
+                    </div>
+                    <p class="text-sm text-gray-700 leading-relaxed mb-3">${message}</p>
+                    ${checked.length ? `<div class="bg-white border border-gray-100 rounded-2xl p-4"><p class="font-black text-gray-800 mb-2">Yang dicentang:</p><ul class="list-disc pl-5 text-sm text-gray-700 space-y-1"><li>${picked}</li></ul></div>` : ''}
+                    <p class="mt-3 text-xs text-gray-500 leading-relaxed">Keterangan ini bukan diagnosis. Pemeriksaan langsung oleh tenaga kesehatan tetap diperlukan untuk memastikan kondisi ibu dan janin.</p>
+                </div>`;
+        }
+
+        const birthChecklistGroups = [
+            { group: 'Perlengkapan Ibu', icon: '👩', items: ['Kain/sarung atau rok longgar', 'Baju kancing depan untuk menyusui', 'Pakaian dalam dan pembalut nifas', 'Sandal nyaman', 'Peralatan mandi pribadi', 'Camilan sehat dan botol minum'] },
+            { group: 'Perlengkapan Bayi', icon: '👶', items: ['Baju bayi beberapa set', 'Popok bayi', 'Kain bedong/selimut', 'Topi, sarung tangan, sarung kaki', 'Handuk bayi', 'Tisu basah/kain lap lembut'] },
+            { group: 'Dokumen', icon: '📄', items: ['Buku KIA', 'KTP/KK', 'Kartu BPJS/asuransi', 'Surat rujukan bila ada', 'Hasil USG/lab penting', 'Nomor kontak bidan/dokter'] },
+            { group: 'Pendamping', icon: '🤝', items: ['Pendamping utama sudah ditentukan', 'Pendamping cadangan tersedia', 'Pendamping tahu tanda persalinan', 'Pendamping tahu lokasi fasilitas kesehatan'] },
+            { group: 'Transportasi', icon: '🚗', items: ['Kendaraan siap', 'Rute ke klinik/RS diketahui', 'Biaya bensin/transport siap', 'Rencana saat malam/hujan/macetan'] },
+            { group: 'Kesehatan', icon: '🏥', items: ['Rencana tempat lahiran', 'Golongan darah diketahui', 'Calon pendonor darah dicatat', 'Obat/vitamin sesuai anjuran dibawa', 'Riwayat alergi/penyakit ditulis'] },
+            { group: 'Keuangan', icon: '💳', items: ['Dana darurat tersedia', 'Administrasi BPJS/asuransi aktif', 'Biaya transport dan konsumsi disiapkan', 'Uang tunai secukupnya'] },
+            { group: 'Mental dan Ilmu', icon: '🧠', items: ['Paham tanda awal persalinan', 'Paham tanda bahaya nifas', 'Latihan napas/relaksasi', 'Diskusi rencana menyusui/IMD', 'Dukungan keluarga disiapkan'] },
+            { group: 'Tambahan', icon: '✨', items: ['Charger HP/powerbank', 'Kantong pakaian kotor', 'Masker dan hand sanitizer', 'Kacamata bila perlu', 'Barang ibadah/pribadi'] }
+        ];
+
+        function renderBirthChecklist() {
+            const container = document.getElementById('birth-checklist-container');
+            if (!container) return;
+            const saved = JSON.parse(localStorage.getItem('rumahBidanBirthChecklist') || '{}');
+            container.innerHTML = birthChecklistGroups.map((group, groupIndex) => `
+                <div class="health-module-card p-5">
+                    <h4 class="font-black text-gray-900 mb-3 flex items-center gap-2"><span class="text-2xl">${group.icon}</span>${group.group}</h4>
+                    <div class="space-y-2">
+                        ${group.items.map((item, itemIndex) => {
+                            const id = `birth-${groupIndex}-${itemIndex}`;
+                            return `<label class="checklist-row"><input type="checkbox" data-birth-check="1" id="${id}" ${saved[id] ? 'checked' : ''} onchange="updateBirthChecklistProgress()"><span class="text-sm text-gray-700 leading-relaxed">${item}</span></label>`;
+                        }).join('')}
+                    </div>
+                </div>
+            `).join('');
+            updateBirthChecklistProgress();
+        }
+
+        function updateBirthChecklistProgress() {
+            const items = Array.from(document.querySelectorAll('[data-birth-check="1"]'));
+            const checked = items.filter(i => i.checked);
+            const saved = {};
+            items.forEach(i => saved[i.id] = i.checked);
+            localStorage.setItem('rumahBidanBirthChecklist', JSON.stringify(saved));
+            const percent = items.length ? Math.round((checked.length / items.length) * 100) : 0;
+            const textEl = document.getElementById('birth-progress-text');
+            const barEl = document.getElementById('birth-progress-bar');
+            if (textEl) textEl.textContent = `${percent}%`;
+            if (barEl) barEl.style.width = `${percent}%`;
+        }
+
+        function resetBirthChecklist() {
+            localStorage.removeItem('rumahBidanBirthChecklist');
+            renderBirthChecklist();
+            const result = document.getElementById('birth-result');
+            if (result) result.classList.add('hide');
+            if (window.showAppToast) window.showAppToast('Checklist persiapan lahiran direset.');
+        }
+
+        function printBirthChecklistSummary() {
+            const items = Array.from(document.querySelectorAll('[data-birth-check="1"]'));
+            const checked = items.filter(i => i.checked).length;
+            const percent = items.length ? Math.round((checked / items.length) * 100) : 0;
+            let status = 'Mulai siapkan bertahap';
+            let tone = 'yellow';
+            if (percent >= 85) { status = 'Hampir siap'; tone = 'green'; }
+            else if (percent < 50) { status = 'Perlu dilengkapi'; tone = 'red'; }
+            const result = document.getElementById('birth-result');
+            result.classList.remove('hide');
+            result.innerHTML = `
+                <div class="health-module-card p-5">
+                    <div class="flex items-start justify-between gap-3">
+                        <div>
+                            <p class="text-xs uppercase tracking-wider font-black text-gray-400">Ringkasan Persiapan</p>
+                            <h4 class="text-2xl font-black text-gray-900">${percent}% selesai</h4>
+                        </div>
+                        ${statusBadge(status, tone)}
+                    </div>
+                    <p class="text-sm text-gray-700 mt-3 leading-relaxed">${checked} dari ${items.length} item sudah dicentang. Lengkapi yang belum siap dan diskusikan rencana persalinan dengan pendamping serta bidan/dokter.</p>
+                </div>`;
+        }
+
+        function calculateKEK(e) {
+            e.preventDefault();
+            const lila = numberValue('kek-lila');
+            const weeks = pregnancyWeekValue('kek-week');
+            const bb = numberValue('kek-bb');
+            const tb = numberValue('kek-tb');
+            const hasBMI = !Number.isNaN(bb) && bb > 0 && !Number.isNaN(tb) && tb > 0;
+            const imt = hasBMI ? bb / Math.pow(tb / 100, 2) : null;
+            const lilaRisk = lila < 23.5;
+            const imtRisk = hasBMI && imt < 18.5 && (!weeks || weeks <= 12);
+            const risk = lilaRisk || imtRisk;
+            const title = risk ? 'Risiko KEK / KEK' : 'Tidak termasuk risiko KEK dari data ini';
+            const tone = risk ? 'red' : 'green';
+            const reasons = [];
+            if (lilaRisk) reasons.push(`LILA ${lila} cm kurang dari 23,5 cm.`);
+            else reasons.push(`LILA ${lila} cm berada pada batas aman.`);
+            if (hasBMI) reasons.push(`IMT pra-hamil/trimester 1: ${imt.toFixed(1)} kg/m²${imtRisk ? ' (kurang dari 18,5).' : '.'}`);
+            else reasons.push('IMT belum dihitung karena BB pra-hamil/trimester 1 dan tinggi badan belum lengkap.');
+
+            document.getElementById('kek-result').innerHTML = `
+                <div class="flex items-start justify-between gap-3 mb-3">
+                    <div>
+                        <p class="text-xs uppercase tracking-wider font-black text-gray-400">Hasil KEK</p>
+                        <h4 class="text-2xl font-black text-gray-900">${title}</h4>
+                    </div>
+                    ${statusBadge(title, tone)}
+                </div>
+                <ul class="list-disc pl-5 text-sm text-gray-700 space-y-1 mb-4">${reasons.map(r => `<li>${r}</li>`).join('')}</ul>
+                <div class="p-4 rounded-2xl bg-green-50 border border-green-100 text-green-800 text-sm leading-relaxed">
+                    <p class="font-black mb-1">Cara mengatasi dan saran makan</p>
+                    <p>Makan lengkap 3 kali sehari ditambah 2 kali kudapan sehat. Utamakan nasi/karbohidrat cukup, protein hewani seperti telur/ikan/ayam/daging, protein nabati seperti tempe/tahu/kacang, sayur, buah, lemak sehat, dan air putih. Bila dinyatakan KEK/risiko KEK, ikuti konseling gizi, ANC rutin, dan program PMT pangan lokal dari puskesmas bila diberikan.</p>
+                </div>
+                <div class="mt-3 p-4 rounded-2xl bg-pink-50 border border-pink-100 text-pink-800 text-sm leading-relaxed">
+                    <strong>Keterangan:</strong> jika kategori kurang atau berisiko, silakan hubungi bidan atau dokter untuk keterangan lebih lanjut.
+                </div>`;
+        }
+
+        function initCekBumil() {
+            const week = state && state.weeks ? state.weeks : '';
+            ['ttv-week', 'risk-week', 'kek-week'].forEach(id => {
+                const el = document.getElementById(id);
+                if (el && !el.value && week) el.value = week;
+            });
+            renderRiskChecklist();
+            renderBirthChecklist();
+        }
+
+        window.addEventListener('load', initCekBumil);
+
         /* ========================================================================
         FITUR PENGHITUNG KONTRAKSI
         ======================================================================== */
@@ -2398,6 +3110,7 @@
                 setup: 'Data Awal',
                 dashboard: 'Beranda Bunda',
                 imt: 'Kalkulator IMT',
+                cekbumil: 'Cek Bumil',
                 kontraksi: 'Timer Kontraksi',
                 profile: 'Profil Bunda',
                 admin: 'Admin Panel'
